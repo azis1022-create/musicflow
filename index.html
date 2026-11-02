@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#e91e63">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Music Flow">
 <title>Music Flow - Vibes Without Borders</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -1226,8 +1230,6 @@ async function initBatteryMonitor() {
         const battery = await navigator.getBattery();
         batteryLevel = battery.level;
         isCharging = battery.charging;
-        // Badge tampilan dihapus sesuai permintaan.
-        // Fitur tetap jalan: mode hemat otomatis aktif saat baterai < 20% & tidak dicas.
         function updateBatteryUI() {
             if (!isCharging && batteryLevel <= 0.2 && !batterySaverMode) {
                 applyBatterySaverMode(true);
@@ -1597,6 +1599,64 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     showToast('✅ Music Flow siap digunakan!', 'success');
 });
+</script>
+
+<!-- ===== ICON & PWA BOOTSTRAP (tambahan terakhir: ikon aplikasi, tidak menyentuh fitur lain) ===== -->
+<script>
+(function () {
+    // Logo Music Flow: kotak gradient pink→ungu + nada musik + gelombang (SVG inline)
+    const SVG_LOGO = `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e91e63"/><stop offset="1" stop-color="#9c27b0"/></linearGradient></defs><rect x="28" y="28" width="456" height="456" rx="108" fill="url(#g)"/><g fill="#ffffff"><polygon points="200,152 362,120 362,178 200,210"/><rect x="344" y="170" width="18" height="88" rx="9"/><rect x="200" y="150" width="18" height="215"/><ellipse cx="182" cy="368" rx="50" ry="38" transform="rotate(-18 182 368)"/></g><g fill="none" stroke="#ffffff" stroke-linecap="round"><path d="M112,302 C200,238 300,248 358,290 C398,318 414,262 392,206" stroke-width="20"/><path d="M118,348 C210,286 320,300 378,336 C408,354 420,322 410,292" stroke-width="20"/><path d="M228,346 C300,382 380,372 414,330" stroke-width="20"/></g></svg>`;
+
+    function setLink(rel, href, type) {
+        let l = document.querySelector('link[rel="' + rel + '"]');
+        if (!l) { l = document.createElement('link'); l.rel = rel; document.head.appendChild(l); }
+        if (type) l.type = type;
+        l.href = href;
+    }
+
+    const svgUri = 'data:image/svg+xml,' + encodeURIComponent(SVG_LOGO);
+    // Ikon tab browser (favicon)
+    setLink('icon', svgUri, 'image/svg+xml');
+
+    // Render SVG → PNG untuk ikon layar utama (native / add to home screen) + manifest PWA
+    const img = new Image();
+    img.onload = function () {
+        try {
+            function makePng(size) {
+                const c = document.createElement('canvas');
+                c.width = size; c.height = size;
+                const ctx = c.getContext('2d');
+                ctx.drawImage(img, 0, 0, size, size);
+                return c.toDataURL('image/png');
+            }
+            const png180 = makePng(180);
+            const png192 = makePng(192);
+            const png512 = makePng(512);
+
+            // Ikon iOS (iPhone/iPad home screen)
+            setLink('apple-touch-icon', png180);
+
+            // Manifest PWA agar saat di-install tampil sebagai aplikasi dengan ikon logo
+            const manifest = {
+                name: 'Music Flow - Vibes Without Borders',
+                short_name: 'Music Flow',
+                start_url: '.',
+                display: 'standalone',
+                background_color: '#0a0a0f',
+                theme_color: '#e91e63',
+                icons: [
+                    { src: png192, sizes: '192x192', type: 'image/png', purpose: 'any' },
+                    { src: png512, sizes: '512x512', type: 'image/png', purpose: 'any' }
+                ]
+            };
+            const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+            setLink('manifest', URL.createObjectURL(blob));
+        } catch (e) {
+            console.log('Icon bootstrap error:', e);
+        }
+    };
+    img.src = svgUri;
+})();
 </script>
 </body>
 </html>
