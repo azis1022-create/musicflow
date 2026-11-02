@@ -226,7 +226,7 @@ body.battery-saver .toast{animation:none}
 <div class="modal-overlay" id="profileModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Profil Saya <span id="batteryBadge" class="battery-badge safe" style="display:none"><i class="fas fa-battery-quarter"></i> <span id="batteryText">100%</span></span></h3>
+            <h3>Profil Saya <span id="batteryBadge" class="battery-badge safe" style="display:none"><i class="fas fa-battery-full"></i> <span id="batteryText">100%</span></span></h3>
             <button class="close-modal"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
@@ -1185,42 +1185,57 @@ function applyBatterySaverMode(enabled) {
     if (toggle) toggle.classList.toggle('active', enabled);
 }
 
+// ===== FUNGSI INI SUDAH DIPERBAIKI: LENGKAP & TERTUTUP SEMPURNA =====
 async function initBatteryMonitor() {
-    if (!navigator.getBattery) return;
+    // Fallback aman: jika browser tidak mendukung Battery API, keluar tanpa error
+    if (!navigator.getBattery) {
+        console.log('Battery API tidak didukung di browser ini');
+        return;
+    }
+
     try {
         const battery = await navigator.getBattery();
         batteryLevel = battery.level;
         isCharging = battery.charging;
-        
+
         function updateBatteryUI() {
             const badge = document.getElementById('batteryBadge');
-            const text = document.getElementById('batteryText');
-            if (!badge || !text) return;
-            
+            if (!badge) return;
+
             const percent = Math.round(batteryLevel * 100);
-            text.textContent = `${percent}%`;
             badge.style.display = 'inline-flex';
-            
-            if (battery.charging) {
+
+            if (isCharging) {
                 badge.className = 'battery-badge safe';
-                badge.innerHTML = `<i class="fas fa-bolt"></i> <span>${percent}% (Charging)</span>`;
+                badge.innerHTML = '<i class="fas fa-bolt"></i> <span id="batteryText">' + percent + '% (Charging)</span>';
             } else if (batteryLevel <= 0.2) {
                 badge.className = 'battery-badge';
-                badge.innerHTML = `<i class="fas fa-battery-quarter"></i> <span>${percent}% (Hemat)</span>`;
+                badge.innerHTML = '<i class="fas fa-battery-quarter"></i> <span id="batteryText">' + percent + '% (Hemat)</span>';
                 if (!batterySaverMode) applyBatterySaverMode(true);
             } else {
                 badge.className = 'battery-badge safe';
-                badge.innerHTML = `<i class="fas fa-battery-full"></i> <span>${percent}%</span>`;
+                badge.innerHTML = '<i class="fas fa-battery-full"></i> <span id="batteryText">' + percent + '%</span>';
             }
         }
-        
+
+        // Tampilkan status baterai pertama kali
         updateBatteryUI();
-        battery.addEventListener('levelchange', () => { batteryLevel = battery.level; updateBatteryUI(); });
-        battery.addEventListener('chargingchange', () => { isCharging = battery.charging; updateBatteryUI(); });
-    } catch(e) {
-        console.log('Battery API not available');
+
+        // Update real-time saat level baterai atau status charging berubah
+        battery.addEventListener('levelchange', function() {
+            batteryLevel = battery.level;
+            updateBatteryUI();
+        });
+
+        battery.addEventListener('chargingchange', function() {
+            isCharging = battery.charging;
+            updateBatteryUI();
+        });
+    } catch (e) {
+        console.log('Battery API tidak tersedia:', e);
     }
 }
+// ===== AKHIR FUNGSI initBatteryMonitor (kurung kurawal lengkap) =====
 
 // ================= BACKUP & EXPORT =================
 async function exportBackup() {
