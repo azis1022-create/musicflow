@@ -46,7 +46,6 @@ body.has-songs .library-section{padding-top:110px}
 .song-row-info{flex:1;min-width:0}
 .song-row-title{font-weight:600;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
 .song-row-artist{font-size:0.8rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* ===== PATCH: ROW ACTIONS (heart + ⋮ saja) ===== */
 .song-row-actions{display:flex;gap:4px;flex-shrink:0}
 .song-row-actions button{width:34px;height:34px;border-radius:50%;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.95rem}
 .song-row-actions button:hover{color:var(--primary);background:rgba(233,30,99,0.1)}
@@ -90,7 +89,6 @@ body.has-songs .library-section{padding-top:110px}
 .playlist-input-group{display:flex;gap:8px;margin-top:10px}
 .playlist-input-group input{flex:1;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid var(--bg-glass-border);border-radius:10px;color:var(--text-primary);font-family:inherit;outline:none}
 .playlist-input-group button{padding:10px 18px;background:var(--primary);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600}
-/* ===== PATCH: BOTTOM PLAYER (LEGA & RAPIH) ===== */
 .bottom-player{position:fixed;bottom:0;left:0;width:100%;background:rgba(10,10,15,0.97);backdrop-filter:blur(25px);border-top:1px solid var(--bg-glass-border);z-index:1000;transform:translateY(100%);transition:0.4s;box-shadow:0 -10px 40px rgba(0,0,0,0.5);padding-bottom:2px}
 .bottom-player.active{transform:translateY(0)}
 .visualizer-canvas{position:absolute;top:-32px;left:0;width:100%;height:32px;pointer-events:none;opacity:0.6;transition:opacity 0.5s}
@@ -120,7 +118,6 @@ body.has-songs .library-section{padding-top:110px}
 .player-progress{display:flex;align-items:center;gap:10px;padding:0 18px 12px;font-size:0.72rem;color:var(--text-muted)}
 .player-progress input[type="range"]{flex:1;-webkit-appearance:none;height:6px;background:rgba(255,255,255,0.12);border-radius:3px;outline:none}
 .player-progress input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--primary);border-radius:50%;cursor:pointer}
-/* ===== PATCH: BOTTOM SHEET (⋮) ===== */
 .bottom-sheet{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:2500;opacity:0;pointer-events:none;transition:0.25s}
 .bottom-sheet.active{opacity:1;pointer-events:all}
 .bottom-sheet-panel{position:absolute;bottom:0;left:0;right:0;background:#15151d;border-radius:20px 20px 0 0;padding:12px 16px calc(16px + env(safe-area-inset-bottom));transform:translateY(100%);transition:0.3s;border-top:1px solid var(--bg-glass-border)}
@@ -160,8 +157,6 @@ body.battery-saver .hero{background:var(--bg-dark)}
 body.battery-saver .gradient-text{background:linear-gradient(135deg,#fff,var(--primary));-webkit-background-clip:text;background-clip:text}
 body.battery-saver .song-row:hover{transform:none}
 body.battery-saver .toast{animation:none}
-.battery-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(244,67,54,0.15);color:#f44336;border-radius:8px;font-size:0.75rem;font-weight:600;margin-left:8px}
-.battery-badge.safe{background:rgba(76,175,80,0.15);color:#4caf50}
 .profile-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--bg-glass-border)}
 .profile-section:first-of-type{margin-top:0;padding-top:0;border-top:none}
 .profile-section-title{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px}
@@ -277,7 +272,7 @@ body.battery-saver .toast{animation:none}
 <div class="modal-overlay" id="profileModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Profil Saya <span id="batteryBadge" class="battery-badge safe" style="display:none"><i class="fas fa-battery-full"></i> <span id="batteryText">100%</span></span></h3>
+            <h3>Profil Saya</h3>
             <button class="close-modal"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
@@ -519,13 +514,13 @@ let parsedLyrics = [];
 let currentLyricIndex = -1;
 let editingLyricSongId = null;
 
-// ================= CLEAN NAME (PATCH) =================
+// ================= CLEAN NAME =================
 function cleanName(name) {
     if (!name) return '';
     let n = String(name);
-    n = n.replace(/_{3,}/g, ' - ');          // ___  → " - "
-    n = n.replace(/_+/g, ' ');               // _    → spasi
-    n = n.replace(/\((256|320)k\)/gi, '');   // (256k)/(320k) → hapus
+    n = n.replace(/_{3,}/g, ' - ');
+    n = n.replace(/_+/g, ' ');
+    n = n.replace(/\((256|320)k\)/gi, '');
     n = n.replace(/\s+/g, ' ').trim();
     if (n.length > 28) n = n.slice(0, 28).trim() + '...';
     return n;
@@ -1231,21 +1226,11 @@ async function initBatteryMonitor() {
         const battery = await navigator.getBattery();
         batteryLevel = battery.level;
         isCharging = battery.charging;
+        // Badge tampilan dihapus sesuai permintaan.
+        // Fitur tetap jalan: mode hemat otomatis aktif saat baterai < 20% & tidak dicas.
         function updateBatteryUI() {
-            const badge = document.getElementById('batteryBadge');
-            if (!badge) return;
-            const percent = Math.round(batteryLevel * 100);
-            badge.style.display = 'inline-flex';
-            if (isCharging) {
-                badge.className = 'battery-badge safe';
-                badge.innerHTML = '<i class="fas fa-bolt"></i> <span id="batteryText">' + percent + '% (Charging)</span>';
-            } else if (batteryLevel <= 0.2) {
-                badge.className = 'battery-badge';
-                badge.innerHTML = '<i class="fas fa-battery-quarter"></i> <span id="batteryText">' + percent + '% (Hemat)</span>';
-                if (!batterySaverMode) applyBatterySaverMode(true);
-            } else {
-                badge.className = 'battery-badge safe';
-                badge.innerHTML = '<i class="fas fa-battery-full"></i> <span id="batteryText">' + percent + '%</span>';
+            if (!isCharging && batteryLevel <= 0.2 && !batterySaverMode) {
+                applyBatterySaverMode(true);
             }
         }
         updateBatteryUI();
