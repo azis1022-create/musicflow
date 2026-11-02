@@ -21,6 +21,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .profile-btn{width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;border:2px solid var(--bg-glass-border);flex-shrink:0}
 .profile-avatar{width:100%;height:100%;object-fit:cover;display:block}
 .hero{min-height:100vh;display:flex;align-items:center;padding:140px 5% 80px;background:radial-gradient(ellipse at 70% 30%,rgba(120,50,180,0.35) 0%,transparent 60%),radial-gradient(ellipse at 30% 70%,rgba(233,30,99,0.2) 0%,transparent 50%);transition:background 0.5s}
+body.has-songs .hero{display:none}
+body.has-songs .library-section{padding-top:110px}
 .hero-container{max-width:1200px;margin:0 auto;text-align:center;width:100%}
 .hero-title{font-size:clamp(2.5rem,5.5vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:24px}
 .gradient-text{background:linear-gradient(135deg,#fff 0%,#e0e0e0 50%,var(--primary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -28,7 +30,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .library-section{padding:80px 5%}
 .section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;margin-bottom:16px;text-align:center}
 .section-desc{color:var(--text-secondary);font-size:1rem;max-width:500px;margin:0 auto 30px;text-align:center}
-.library-toolbar{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;align-items:center;max-width:1100px;margin-left:auto;margin-right:auto}
+.library-toolbar{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;align-items:center;max-width:1100px;margin-left:auto;margin-right:auto;position:sticky;top:68px;background:rgba(10,10,15,0.92);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);z-index:900;padding:10px;border-radius:14px;border:1px solid var(--bg-glass-border)}
 .search-box{flex:1;min-width:200px;position:relative}
 .search-box input{width:100%;padding:12px 16px 12px 44px;background:rgba(255,255,255,0.03);border:1px solid var(--bg-glass-border);border-radius:12px;color:var(--text-primary);font-size:0.9rem;outline:none}
 .search-box input:focus{border-color:var(--primary)}
@@ -48,7 +50,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .song-row-actions button{width:34px;height:34px;border-radius:50%;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .song-row-actions button:hover{color:var(--primary);background:rgba(233,30,99,0.1)}
 .song-row-actions .fav-btn.active{color:var(--primary)}
-.upload-row{border:2px dashed var(--bg-glass-border);justify-content:center;padding:24px}
+.upload-row{border:2px dashed var(--bg-glass-border);justify-content:center;padding:18px}
 .upload-row:hover{border-color:var(--primary);background:rgba(233,30,99,0.05)}
 .upload-row i{font-size:1.5rem;color:var(--primary);margin-right:10px}
 .upload-row span{font-weight:600}
@@ -57,10 +59,15 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .modal-content{background:var(--bg-dark);border:1px solid var(--bg-glass-border);border-radius:24px;width:100%;max-width:500px;max-height:85vh;display:flex;flex-direction:column;transform:scale(0.9);transition:0.3s}
 .modal-overlay.active .modal-content{transform:scale(1)}
 .modal-header{padding:20px 24px;border-bottom:1px solid var(--bg-glass-border);display:flex;justify-content:space-between;align-items:center}
-.modal-header h3{font-size:1.2rem;font-weight:700}
-.close-modal{background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.modal-header h3{font-size:1.2rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.close-modal{background:none;border:none;color:var(--text-secondary);font-size:1.2rem;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .close-modal:hover{color:var(--primary)}
 .modal-body{flex:1;overflow-y:auto;padding:20px 24px}
+.song-menu-item{width:100%;display:flex;align-items:center;gap:12px;padding:14px 16px;background:rgba(255,255,255,0.03);border:1px solid var(--bg-glass-border);border-radius:12px;color:var(--text-primary);cursor:pointer;font-family:inherit;font-size:0.92rem;font-weight:600;margin-bottom:8px;text-align:left;transition:0.2s}
+.song-menu-item:hover{background:rgba(233,30,99,0.1);border-color:var(--primary);color:var(--primary)}
+.song-menu-item i{width:20px;text-align:center}
+.song-menu-item.danger{color:#f44336;border-color:rgba(244,67,54,0.3);background:rgba(244,67,54,0.08)}
+.song-menu-item.danger:hover{background:rgba(244,67,54,0.15);border-color:#f44336;color:#f44336}
 .profile-info{text-align:center;padding:20px 0;border-bottom:1px solid var(--bg-glass-border);margin-bottom:20px}
 .profile-avatar-wrapper{position:relative;display:inline-block;margin-bottom:12px}
 .profile-avatar-large{width:100px;height:100px;border-radius:50%;border:3px solid var(--primary);object-fit:cover;display:block}
@@ -89,28 +96,32 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .playlist-input-group button{padding:10px 18px;background:var(--primary);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600}
 .bottom-player{position:fixed;bottom:0;left:0;width:100%;background:rgba(10,10,15,0.97);backdrop-filter:blur(25px);border-top:1px solid var(--bg-glass-border);z-index:1000;transform:translateY(100%);transition:0.4s;box-shadow:0 -10px 40px rgba(0,0,0,0.5)}
 .bottom-player.active{transform:translateY(0)}
-.visualizer-canvas{position:absolute;top:-40px;left:0;width:100%;height:40px;pointer-events:none;opacity:0.55;transition:opacity 0.5s}
-.player-main{display:flex;align-items:center;gap:16px;padding:12px 20px}
-.player-vinyl{width:55px;height:55px;border-radius:50%;background:linear-gradient(135deg,#1a1a1a,#333);border:2px solid rgba(255,255,255,0.1);position:relative;overflow:hidden;flex-shrink:0}
+.visualizer-canvas{position:absolute;top:-32px;left:0;width:100%;height:32px;pointer-events:none;opacity:0.6;transition:opacity 0.5s}
+.player-progress-top{padding:12px 16px 0}
+.player-progress-top input[type="range"]{width:100%;display:block;-webkit-appearance:none;height:4px;background:rgba(255,255,255,0.12);border-radius:2px;outline:none}
+.player-progress-top input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--primary);border-radius:50%;cursor:pointer}
+.player-main{display:flex;align-items:center;gap:12px;padding:10px 16px 4px}
+.player-vinyl{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#1a1a1a,#333);border:2px solid rgba(255,255,255,0.1);position:relative;overflow:hidden;flex-shrink:0}
 .player-vinyl.spinning{animation:spin 4s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .player-vinyl-cover{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;height:60%;border-radius:50%;background:linear-gradient(135deg,var(--primary),#9c27b0);display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden}
 .player-info{flex:1;min-width:0}
-.player-text span:first-child{font-weight:600;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-.player-text span:last-child{font-size:0.75rem;color:var(--text-muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.player-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.player-controls button{background:none;border:none;color:var(--text-secondary);font-size:0.95rem;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.player-text span:first-child{font-weight:700;font-size:0.92rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.player-text span:last-child{font-size:0.72rem;color:var(--text-muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#favBtn{background:none;border:none;color:var(--text-secondary);font-size:1.15rem;cursor:pointer;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+#favBtn:hover{color:var(--primary);background:rgba(233,30,99,0.1)}
+.player-controls{display:flex;align-items:center;justify-content:center;gap:12px;padding:6px 16px 8px}
+.player-controls button{background:none;border:none;color:var(--text-secondary);font-size:1rem;cursor:pointer;width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .player-controls button:hover{color:var(--text-primary);background:rgba(255,255,255,0.05)}
 .player-controls button.active-mode{color:var(--primary)!important;background:rgba(233,30,99,0.15)}
-.play-pause-main{width:44px!important;height:44px!important;background:var(--primary)!important;color:#fff!important;border-radius:50%!important;box-shadow:0 4px 15px var(--primary-glow)}
-.player-extra{display:flex;align-items:center;gap:10px;padding:0 20px 10px;flex-wrap:wrap}
-.volume-control{display:flex;align-items:center;gap:8px;flex:1;min-width:150px}
+.play-pause-main{width:52px!important;height:52px!important;background:var(--primary)!important;color:#fff!important;border-radius:50%!important;box-shadow:0 4px 18px var(--primary-glow);font-size:1.15rem!important}
+.player-bottom-row{display:flex;align-items:center;justify-content:space-between;padding:0 18px 10px;font-size:0.72rem;color:var(--text-muted)}
+#playerMoreBtn{background:none;border:none;color:var(--text-secondary);cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.95rem}
+#playerMoreBtn:hover{background:rgba(255,255,255,0.06);color:var(--text-primary)}
+.volume-control{display:flex;align-items:center;gap:10px;margin-bottom:14px}
 .volume-control i{color:var(--text-secondary);cursor:pointer}
-.volume-slider{flex:1;max-width:120px;-webkit-appearance:none;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;outline:none}
+.volume-slider{flex:1;-webkit-appearance:none;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;outline:none}
 .volume-slider::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--primary);border-radius:50%;cursor:pointer}
-.player-progress{display:flex;align-items:center;gap:10px;padding:0 20px 12px;font-size:0.75rem;color:var(--text-muted)}
-.player-progress input[type="range"]{flex:1;-webkit-appearance:none;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;outline:none}
-.player-progress input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;background:var(--primary);border-radius:50%;cursor:pointer}
 .toast-container{position:fixed;top:90px;right:20px;z-index:3000;display:flex;flex-direction:column;gap:10px;pointer-events:none}
 .toast{background:rgba(10,10,15,0.95);border:1px solid var(--bg-glass-border);border-left:4px solid var(--primary);padding:14px 20px;border-radius:12px;font-size:0.9rem;box-shadow:0 10px 30px rgba(0,0,0,0.4);animation:slideIn 0.4s ease-out,fadeOut 0.4s ease-in 2.6s forwards;display:flex;align-items:center;gap:10px;max-width:320px;pointer-events:auto}
 .toast.success{border-left-color:#4caf50}
@@ -135,17 +146,18 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .lyric-upload-area:hover{border-color:var(--primary);background:rgba(233,30,99,0.05)}
 .lyric-upload-area i{font-size:2rem;color:var(--primary);margin-bottom:10px}
 
-/* ===== BATTERY SAVER MODE ===== */
-body.battery-saver .visualizer-canvas{opacity:0!important;display:none}
+/* ===== BATTERY SAVER MODE (TOTAL) ===== */
+body.battery-saver .visualizer-canvas{display:none!important}
+body.battery-saver .player-vinyl.spinning{animation:none!important}
+body.battery-saver .navbar,body.battery-saver .bottom-player,body.battery-saver .library-toolbar{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 body.battery-saver .hero{background:var(--bg-dark)}
-body.battery-saver .player-vinyl.spinning{animation-duration:8s}
 body.battery-saver .gradient-text{background:linear-gradient(135deg,#fff,var(--primary));-webkit-background-clip:text;background-clip:text}
 body.battery-saver .song-row:hover{transform:none}
 body.battery-saver .toast{animation:none}
 .battery-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(244,67,54,0.15);color:#f44336;border-radius:8px;font-size:0.75rem;font-weight:600;margin-left:8px}
 .battery-badge.safe{background:rgba(76,175,80,0.15);color:#4caf50}
 
-/* ===== PROFILE SECTION STYLING (Rapih) ===== */
+/* ===== PROFILE SECTION STYLING ===== */
 .profile-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--bg-glass-border)}
 .profile-section:first-of-type{margin-top:0;padding-top:0;border-top:none}
 .profile-section-title{font-size:1rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px}
@@ -165,7 +177,7 @@ body.battery-saver .toast{animation:none}
 .backup-btn.import{background:rgba(255,255,255,0.03);border-color:var(--bg-glass-border);color:var(--text-primary)}
 .backup-btn.import:hover{background:rgba(233,30,99,0.1);border-color:var(--primary);color:var(--primary)}
 
-/* ===== MOBILE RAPIH & BERSIH ===== */
+@media(min-width:769px){.library-toolbar{top:96px}}
 @media(max-width:768px){
     .navbar{top:12px;width:calc(100% - 24px);padding:10px 14px;border-radius:16px}
     .logo{font-size:1.05rem;gap:8px}
@@ -173,33 +185,23 @@ body.battery-saver .toast{animation:none}
     .nav-actions{gap:8px}
     #navUploadBtn{padding:8px 12px!important;font-size:0.8rem!important}
     .profile-btn{width:34px;height:34px}
-    .hero{padding:110px 5% 60px}
+    body.has-songs .library-section{padding-top:90px}
     .library-section{padding:50px 4%}
     .song-row{padding:10px 12px;gap:10px}
     .song-row-cover{width:44px;height:44px;border-radius:8px}
     .song-row-title{font-size:0.9rem}
     .song-row-artist{font-size:0.75rem}
     .song-row-actions{gap:2px}
-    .song-row-actions button{width:30px;height:30px;font-size:0.8rem}
-    .upload-row{padding:18px}
-    .visualizer-canvas{top:-24px;height:24px;opacity:0.45}
-    .player-main{padding:10px 12px;gap:10px}
-    .player-vinyl{width:46px;height:46px}
-    .player-info{min-width:70px}
-    .player-text span:first-child{font-size:0.85rem}
-    .player-text span:last-child{font-size:0.7rem}
-    .player-controls{gap:2px}
-    .player-controls button{width:30px;height:30px;font-size:0.8rem}
-    .play-pause-main{width:38px!important;height:38px!important}
-    .player-extra{padding:0 12px 6px;gap:8px}
-    .volume-control{min-width:110px}
-    .volume-slider{max-width:90px}
-    #lyricsBtn,#sleepTimerBtn{padding:6px 10px;font-size:0.8rem}
-    .player-progress{padding:0 12px 10px}
+    .song-row-actions button{width:32px;height:32px;font-size:0.85rem}
+    .player-main{padding:8px 12px 2px;gap:10px}
+    .player-controls{gap:8px;padding:4px 12px 6px}
+    .player-controls button{width:34px;height:34px;font-size:0.9rem}
+    .play-pause-main{width:46px!important;height:46px!important}
+    .player-progress-top{padding:10px 12px 0}
+    .player-bottom-row{padding:0 14px 8px}
     .toast-container{left:12px;right:12px;top:70px}
     .toast{max-width:100%}
     .modal-body{padding:16px 18px}
-    .backup-buttons{grid-template-columns:1fr 1fr;gap:8px}
 }
 </style>
 </head>
@@ -257,6 +259,39 @@ body.battery-saver .toast{animation:none}
     </div>
 </section>
 
+<!-- Song Menu Modal (tombol ...) -->
+<div class="modal-overlay" id="songMenuModal">
+    <div class="modal-content" style="max-width:340px">
+        <div class="modal-header">
+            <h3 id="songMenuTitle">Menu Lagu</h3>
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" style="padding:14px">
+            <button class="song-menu-item" id="menuAddPlaylist"><i class="fas fa-plus"></i> Tambah ke Playlist</button>
+            <button class="song-menu-item" id="menuViewLyrics"><i class="fas fa-align-center"></i> Lihat Lirik</button>
+            <button class="song-menu-item danger" id="menuDeleteSong"><i class="fas fa-trash"></i> Hapus</button>
+        </div>
+    </div>
+</div>
+
+<!-- Player More Modal (volume, lirik, tidur) -->
+<div class="modal-overlay" id="playerMoreModal">
+    <div class="modal-content" style="max-width:340px">
+        <div class="modal-header">
+            <h3>Opsi Player</h3>
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" style="padding:16px">
+            <div class="volume-control">
+                <i class="fas fa-volume-up" id="volumeIcon"></i>
+                <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80">
+            </div>
+            <button class="song-menu-item" id="lyricsBtn"><i class="fas fa-align-center"></i> Lirik</button>
+            <button class="song-menu-item" id="sleepTimerBtn"><i class="fas fa-moon"></i> Mode Tidur <span id="sleepTimerLabel" style="margin-left:auto;font-size:0.78rem;color:var(--text-muted)">Nonaktif</span></button>
+        </div>
+    </div>
+</div>
+
 <!-- Profile Modal -->
 <div class="modal-overlay" id="profileModal">
     <div class="modal-content">
@@ -280,7 +315,6 @@ body.battery-saver .toast{animation:none}
                 <div class="stat-card"><i class="fas fa-heart"></i><div class="stat-card-value" id="statTotalFav">0</div><div class="stat-card-label">Favorit</div></div>
             </div>
             
-            <!-- Battery Saver Section (Rapih) -->
             <div class="profile-section">
                 <div class="profile-section-title"><i class="fas fa-battery-half"></i> Mode Hemat Baterai</div>
                 <div class="toggle-row">
@@ -290,7 +324,6 @@ body.battery-saver .toast{animation:none}
                 <p class="profile-section-desc">Otomatis aktif saat baterai &lt; 20%. Visualizer &amp; animasi dimatikan untuk menghemat daya.</p>
             </div>
             
-            <!-- Backup Section (Rapih) -->
             <div class="profile-section">
                 <div class="profile-section-title"><i class="fas fa-cloud-upload-alt"></i> Backup &amp; Ekspor Data</div>
                 <p class="profile-section-desc">Simpan metadata, playlist, lirik &amp; favorit ke file JSON. Cegah kehilangan data saat berganti perangkat.</p>
@@ -408,9 +441,12 @@ body.battery-saver .toast{animation:none}
     </div>
 </div>
 
-<!-- Bottom Player -->
+<!-- Bottom Player (Redesign) -->
 <div class="bottom-player" id="bottomPlayer">
     <canvas class="visualizer-canvas" id="visualizerCanvas"></canvas>
+    <div class="player-progress-top">
+        <input type="range" id="progressBar" value="0" min="0" max="100">
+    </div>
     <div class="player-main">
         <div class="player-vinyl" id="playerVinyl">
             <div class="player-vinyl-cover" id="playerVinylCover"><i class="fas fa-music"></i></div>
@@ -421,30 +457,18 @@ body.battery-saver .toast{animation:none}
                 <span id="playerArtist">Upload lagu untuk memulai</span>
             </div>
         </div>
-        <div class="player-controls">
-            <button id="shuffleBtn" title="Acak"><i class="fas fa-random"></i></button>
-            <button id="prevBtn" title="Sebelumnya"><i class="fas fa-step-backward"></i></button>
-            <button id="playPauseBtn" class="play-pause-main"><i class="fas fa-play"></i></button>
-            <button id="nextBtn" title="Berikutnya"><i class="fas fa-step-forward"></i></button>
-            <button id="repeatBtn" title="Ulangi"><i class="fas fa-redo"></i></button>
-        </div>
-        <button id="favBtn" title="Favorit" style="background:none;border:none;color:var(--text-secondary);font-size:1rem;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="far fa-heart"></i></button>
+        <button id="favBtn" title="Favorit"><i class="far fa-heart"></i></button>
     </div>
-    <div class="player-extra">
-        <div class="volume-control">
-            <i class="fas fa-volume-up" id="volumeIcon"></i>
-            <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80">
-        </div>
-        <button id="lyricsBtn" title="Lirik" style="background:none;border:1px solid var(--bg-glass-border);color:var(--text-secondary);font-size:0.9rem;cursor:pointer;padding:8px 14px;border-radius:10px;display:flex;align-items:center;gap:6px;font-family:inherit;white-space:nowrap">
-            <i class="fas fa-align-center"></i> <span>Lirik</span>
-        </button>
-        <button id="sleepTimerBtn" title="Mode Tidur" style="background:none;border:1px solid var(--bg-glass-border);color:var(--text-secondary);font-size:0.9rem;cursor:pointer;padding:8px 14px;border-radius:10px;display:flex;align-items:center;gap:6px;font-family:inherit;white-space:nowrap">
-            <i class="fas fa-moon"></i> <span id="sleepTimerLabel">Tidur</span>
-        </button>
+    <div class="player-controls">
+        <button id="shuffleBtn" title="Acak"><i class="fas fa-random"></i></button>
+        <button id="prevBtn" title="Sebelumnya"><i class="fas fa-step-backward"></i></button>
+        <button id="playPauseBtn" class="play-pause-main"><i class="fas fa-play"></i></button>
+        <button id="nextBtn" title="Berikutnya"><i class="fas fa-step-forward"></i></button>
+        <button id="repeatBtn" title="Ulangi"><i class="fas fa-redo"></i></button>
     </div>
-    <div class="player-progress">
+    <div class="player-bottom-row">
         <span id="currentTime">0:00</span>
-        <input type="range" id="progressBar" value="0" min="0" max="100">
+        <button id="playerMoreBtn" title="Opsi lain"><i class="fas fa-ellipsis-h"></i></button>
         <span id="duration">0:00</span>
     </div>
     <audio id="audioElement"></audio>
@@ -497,6 +521,7 @@ let currentSong = null, currentSongId = null;
 let audioContext = null, analyser = null, sourceNode = null;
 let currentTab = 'all';
 let currentAddToPlaylistSongId = null;
+let currentMenuSongId = null;
 let isMuted = false, lastVolume = 0.8;
 let totalListenTime = parseInt(localStorage.getItem('totalListenTime') || '0');
 let totalPlays = parseInt(localStorage.getItem('totalPlays') || '0');
@@ -516,6 +541,28 @@ let parsedLyrics = [];
 let currentLyricIndex = -1;
 let editingLyricSongId = null;
 let pendingLyricText = '';
+
+// ================= CLEAN NAME =================
+function cleanName(raw) {
+    if (!raw) return '';
+    let name = String(raw);
+    // 1. ganti _ dan __ jadi spasi
+    name = name.replace(/_+/g, ' ');
+    // 2. hapus (256k), (320k), [Official], (Lyric Video), (Audio)
+    name = name.replace(/\(\s*\d+\s*k\s*\)/gi, '');
+    name = name.replace(/\[\s*official\s*\]/gi, '');
+    name = name.replace(/\(\s*lyric\s+video\s*\)/gi, '');
+    name = name.replace(/\(\s*audio\s*\)/gi, '');
+    // 3. ganti - jadi " - "
+    name = name.replace(/-/g, ' - ');
+    // 4. ft. jadi feat.
+    name = name.replace(/\bft\./gi, 'feat.');
+    // 5. rapikan spasi & trim
+    name = name.replace(/\s+/g, ' ').trim();
+    // 6. max 60 karakter
+    if (name.length > 60) name = name.slice(0, 60).trim();
+    return name;
+}
 
 // ================= UI HELPERS =================
 function showToast(message, type = 'info') {
@@ -648,6 +695,9 @@ drawVisualizer();
 async function renderSongList() {
     try {
         const songs = await DB.getAllSongs();
+        // Hero otomatis sembunyi kalau ada lagu
+        document.body.classList.toggle('has-songs', songs.length > 0);
+        
         const searchQuery = document.getElementById('searchInput').value.toLowerCase();
         const listContainer = document.getElementById('songList');
         let displaySongs = [...songs];
@@ -658,6 +708,7 @@ async function renderSongList() {
         if (searchQuery) {
             displaySongs = displaySongs.filter(s => 
                 s.name.toLowerCase().includes(searchQuery) ||
+                cleanName(s.name).toLowerCase().includes(searchQuery) ||
                 (s.artist && s.artist.toLowerCase().includes(searchQuery))
             );
         }
@@ -684,14 +735,12 @@ async function renderSongList() {
             row.innerHTML = `
                 <div class="song-row-cover">${getCoverArt(song)}</div>
                 <div class="song-row-info">
-                    <div class="song-row-title">${song.name}</div>
+                    <div class="song-row-title">${cleanName(song.name)}</div>
                     <div class="song-row-artist">${song.artist || 'Artis Tidak Diketahui'}</div>
                 </div>
                 <div class="song-row-actions">
                     <button class="fav-btn ${song.isFavorite ? 'active' : ''}" data-id="${song.id}" data-action="fav"><i class="fa${song.isFavorite ? 's' : 'r'} fa-heart"></i></button>
-                    <button data-id="${song.id}" data-action="lyrics" title="Lirik"><i class="fas fa-align-center"></i></button>
-                    <button data-id="${song.id}" data-action="addtoplaylist"><i class="fas fa-plus"></i></button>
-                    <button data-id="${song.id}" data-action="delete"><i class="fas fa-trash"></i></button>
+                    <button data-id="${song.id}" data-action="menu" title="Menu lainnya"><i class="fas fa-ellipsis-h"></i></button>
                 </div>
             `;
             listContainer.appendChild(row);
@@ -699,6 +748,26 @@ async function renderSongList() {
     } catch(err) {
         console.error('renderSongList error:', err);
     }
+}
+
+async function deleteSongById(id) {
+    if (!confirm('Hapus lagu ini?')) return;
+    await DB.deleteSong(id);
+    if (currentSongId === id) {
+        document.getElementById('audioElement').pause();
+        document.getElementById('audioElement').src = '';
+        document.getElementById('bottomPlayer').classList.remove('active');
+        currentSong = null; currentSongId = null;
+    }
+    renderSongList();
+    updateStats();
+    showToast('Lagu dihapus', 'success');
+}
+
+function openSongMenu(id, displayName) {
+    currentMenuSongId = id;
+    document.getElementById('songMenuTitle').textContent = displayName;
+    document.getElementById('songMenuModal').classList.add('active');
 }
 
 document.getElementById('songList').addEventListener('click', async (e) => {
@@ -720,26 +789,18 @@ document.getElementById('songList').addEventListener('click', async (e) => {
             updateStats();
             showToast(s.isFavorite ? '❤️ Ditambahkan ke favorit' : 'Dihapus dari favorit', 'success');
         }
-        else if (action === 'lyrics') {
-            editingLyricSongId = id;
-            openLyricsModal(id);
+        else if (action === 'menu') {
+            const songs = await DB.getAllSongs();
+            const s = songs.find(x => x.id === id);
+            if (!s) return;
+            openSongMenu(id, cleanName(s.name));
         }
         else if (action === 'addtoplaylist') {
             currentAddToPlaylistSongId = id;
             openAddToPlaylistModal();
         }
         else if (action === 'delete') {
-            if (!confirm('Hapus lagu ini?')) return;
-            await DB.deleteSong(id);
-            if (currentSongId === id) {
-                document.getElementById('audioElement').pause();
-                document.getElementById('audioElement').src = '';
-                document.getElementById('bottomPlayer').classList.remove('active');
-                currentSong = null; currentSongId = null;
-            }
-            renderSongList();
-            updateStats();
-            showToast('Lagu dihapus', 'success');
+            await deleteSongById(id);
         }
         return;
     }
@@ -751,6 +812,22 @@ document.getElementById('songList').addEventListener('click', async (e) => {
         const song = songs.find(s => s.id === id);
         if (song) await playSong(song);
     }
+});
+
+// Song Menu Modal actions
+document.getElementById('menuAddPlaylist').addEventListener('click', () => {
+    document.getElementById('songMenuModal').classList.remove('active');
+    currentAddToPlaylistSongId = currentMenuSongId;
+    openAddToPlaylistModal();
+});
+document.getElementById('menuViewLyrics').addEventListener('click', () => {
+    document.getElementById('songMenuModal').classList.remove('active');
+    editingLyricSongId = currentMenuSongId;
+    openLyricsModal(currentMenuSongId);
+});
+document.getElementById('menuDeleteSong').addEventListener('click', async () => {
+    document.getElementById('songMenuModal').classList.remove('active');
+    await deleteSongById(currentMenuSongId);
 });
 
 // ================= PLAYBACK =================
@@ -776,7 +853,7 @@ async function playSong(song) {
             });
         }
         
-        document.getElementById('playerTitle').textContent = song.name;
+        document.getElementById('playerTitle').textContent = cleanName(song.name);
         document.getElementById('playerArtist').textContent = song.artist || 'Artis Tidak Diketahui';
         
         const coverEl = document.getElementById('playerVinylCover');
@@ -788,7 +865,7 @@ async function playSong(song) {
         document.getElementById('bottomPlayer').classList.add('active');
         
         updateFavButton();
-        showToast(`▶ Memutar: ${song.name}`, 'info');
+        showToast(`▶ Memutar: ${cleanName(song.name)}`, 'info');
         
         song.playCount = (song.playCount || 0) + 1;
         song.lastPlayed = Date.now();
@@ -893,7 +970,7 @@ async function handleUpload(e) {
         }
         
         await DB.addSong({
-            name: tags.name, artist: tags.artist, album: tags.album, coverArt: tags.coverArt,
+            name: cleanName(tags.name), artist: tags.artist, album: tags.album, coverArt: tags.coverArt,
             file: file, isFavorite: false, playCount: 0, lastPlayed: null, dateAdded: Date.now(), lrc: null
         });
     }
@@ -954,7 +1031,7 @@ document.getElementById('playlistList').addEventListener('click', async (e) => {
                 const row = document.createElement('div');
                 row.className = 'song-row';
                 row.dataset.id = song.id;
-                row.innerHTML = `<div class="song-row-cover">${getCoverArt(song)}</div><div class="song-row-info"><div class="song-row-title">${song.name}</div><div class="song-row-artist">${song.artist || 'Artis Tidak Diketahui'}</div></div>`;
+                row.innerHTML = `<div class="song-row-cover">${getCoverArt(song)}</div><div class="song-row-info"><div class="song-row-title">${cleanName(song.name)}</div><div class="song-row-artist">${song.artist || 'Artis Tidak Diketahui'}</div></div>`;
                 listContainer.appendChild(row);
             });
         }
@@ -1091,6 +1168,7 @@ function updateSleepTimerUI() {
             const m = Math.floor(remaining / 60);
             const s = remaining % 60;
             label.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+            label.style.color = 'var(--primary)';
         }
         if (status) {
             const remaining = Math.ceil((sleepTimerTarget - Date.now()) / 1000);
@@ -1102,9 +1180,12 @@ function updateSleepTimerUI() {
         }
     } else {
         btn.style.borderColor = 'var(--bg-glass-border)';
-        btn.style.color = 'var(--text-secondary)';
-        btn.style.background = 'transparent';
-        if (label) label.textContent = 'Tidur';
+        btn.style.color = '';
+        btn.style.background = 'rgba(255,255,255,0.03)';
+        if (label) {
+            label.textContent = 'Nonaktif';
+            label.style.color = 'var(--text-muted)';
+        }
         if (status) {
             status.textContent = 'Mode tidur tidak aktif';
             status.style.color = 'var(--text-secondary)';
@@ -1168,7 +1249,7 @@ async function openLyricsModal(songId) {
     const song = songs.find(s => s.id === songId);
     if (!song) return;
     
-    document.getElementById('lyricsTitle').textContent = `🎤 ${song.name}`;
+    document.getElementById('lyricsTitle').textContent = `🎤 ${cleanName(song.name)}`;
     document.getElementById('lyricsView').style.display = 'block';
     document.getElementById('lyricsEditor').style.display = 'none';
     
@@ -1509,10 +1590,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Playlist dibuat!', 'success');
     });
     
-    ['playlistDetailModal', 'addToPlaylistModal', 'sleepTimerModal', 'lyricsModal'].forEach(modalId => {
+    ['playlistDetailModal', 'addToPlaylistModal', 'sleepTimerModal', 'lyricsModal', 'songMenuModal', 'playerMoreModal'].forEach(modalId => {
         const modal = document.getElementById(modalId);
         modal.querySelector('.close-modal').addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    });
+
+    // Player More button
+    document.getElementById('playerMoreBtn').addEventListener('click', () => {
+        document.getElementById('playerMoreModal').classList.add('active');
+    });
+    // Tutup menu opsi saat Lirik / Tidur dibuka
+    document.getElementById('lyricsBtn').addEventListener('click', () => {
+        document.getElementById('playerMoreModal').classList.remove('active');
+    });
+    document.getElementById('sleepTimerBtn').addEventListener('click', () => {
+        document.getElementById('playerMoreModal').classList.remove('active');
     });
 
     document.getElementById('sleepTimerBtn').addEventListener('click', () => {
