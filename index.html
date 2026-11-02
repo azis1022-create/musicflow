@@ -11,7 +11,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--primary:#e91e63;--primary-dark:#c2185b;--primary-glow:rgba(233,30,99,0.4);--bg-dark:#0a0a0f;--bg-glass:rgba(255,255,255,0.06);--bg-glass-border:rgba(255,255,255,0.1);--text-primary:#fff;--text-secondary:#a0a0b0;--text-muted:#6a6a7a}
-body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;padding-bottom:200px}
+body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;padding-bottom:200px;transition:background 0.5s}
 .navbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:1200px;z-index:1000;padding:14px 32px;border-radius:20px;background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid var(--bg-glass-border);display:flex;align-items:center;justify-content:space-between}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.3rem;color:var(--text-primary);text-decoration:none}
 .logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),#9c27b0);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff}
@@ -20,7 +20,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 4px 20px var(--primary-glow)}
 .profile-btn{width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;border:2px solid var(--bg-glass-border)}
 .profile-avatar{width:100%;height:100%;object-fit:cover;display:block}
-.hero{min-height:100vh;display:flex;align-items:center;padding:140px 5% 80px;background:radial-gradient(ellipse at 70% 30%,rgba(120,50,180,0.35) 0%,transparent 60%),radial-gradient(ellipse at 30% 70%,rgba(233,30,99,0.2) 0%,transparent 50%)}
+.hero{min-height:100vh;display:flex;align-items:center;padding:140px 5% 80px;background:radial-gradient(ellipse at 70% 30%,rgba(120,50,180,0.35) 0%,transparent 60%),radial-gradient(ellipse at 30% 70%,rgba(233,30,99,0.2) 0%,transparent 50%);transition:background 0.5s}
 .hero-container{max-width:1200px;margin:0 auto;text-align:center;width:100%}
 .hero-title{font-size:clamp(2.5rem,5.5vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:24px}
 .gradient-text{background:linear-gradient(135deg,#fff 0%,#e0e0e0 50%,var(--primary) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -89,7 +89,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .playlist-input-group button{padding:10px 18px;background:var(--primary);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600}
 .bottom-player{position:fixed;bottom:0;left:0;width:100%;background:rgba(10,10,15,0.97);backdrop-filter:blur(25px);border-top:1px solid var(--bg-glass-border);z-index:1000;transform:translateY(100%);transition:0.4s;box-shadow:0 -10px 40px rgba(0,0,0,0.5)}
 .bottom-player.active{transform:translateY(0)}
-.visualizer-canvas{position:absolute;top:-40px;left:0;width:100%;height:40px;pointer-events:none;opacity:0.7}
+.visualizer-canvas{position:absolute;top:-40px;left:0;width:100%;height:40px;pointer-events:none;opacity:0.7;transition:opacity 0.5s}
 .player-main{display:flex;align-items:center;gap:16px;padding:12px 20px}
 .player-vinyl{width:55px;height:55px;border-radius:50%;background:linear-gradient(135deg,#1a1a1a,#333);border:2px solid rgba(255,255,255,0.1);position:relative;overflow:hidden;flex-shrink:0}
 .player-vinyl.spinning{animation:spin 4s linear infinite}
@@ -119,12 +119,55 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .sleep-time-btn:hover{background:rgba(233,30,99,0.1);border-color:var(--primary);color:var(--primary)}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes fadeOut{to{opacity:0;transform:translateX(20px)}}
-@media(max-width:768px){.player-main{padding:10px 15px;gap:12px}.player-extra{padding:0 15px 8px}.player-progress{padding:0 15px 10px}.player-controls{gap:4px}.player-controls button{width:32px;height:32px;font-size:0.85rem}.play-pause-main{width:40px!important;height:40px!important}.toast-container{left:20px;right:20px}.toast{max-width:100%}}
+
+/* ===== LYRICS MODAL ===== */
+.lyrics-container{max-height:60vh;overflow-y:auto;padding:20px 0;scroll-behavior:smooth}
+.lyric-line{padding:10px 16px;text-align:center;color:var(--text-muted);font-size:1rem;transition:all 0.3s;border-radius:8px;margin:4px 0;cursor:pointer}
+.lyric-line:hover{background:rgba(255,255,255,0.03)}
+.lyric-line.active{color:var(--primary);font-weight:700;font-size:1.15rem;background:rgba(233,30,99,0.08);transform:scale(1.02)}
+.lyric-line.empty{color:var(--text-muted);font-style:italic}
+.lyric-editor{width:100%;min-height:200px;background:rgba(255,255,255,0.03);border:1px solid var(--bg-glass-border);border-radius:12px;padding:12px;color:var(--text-primary);font-family:'Courier New',monospace;font-size:0.9rem;resize:vertical;outline:none}
+.lyric-editor:focus{border-color:var(--primary)}
+.lyric-tabs{display:flex;gap:8px;margin-bottom:16px}
+.lyric-tab{flex:1;padding:10px;background:rgba(255,255,255,0.03);border:1px solid var(--bg-glass-border);border-radius:10px;color:var(--text-secondary);cursor:pointer;font-family:inherit;font-size:0.9rem;font-weight:600}
+.lyric-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.lyric-upload-area{border:2px dashed var(--bg-glass-border);border-radius:12px;padding:30px;text-align:center;cursor:pointer;transition:0.3s}
+.lyric-upload-area:hover{border-color:var(--primary);background:rgba(233,30,99,0.05)}
+.lyric-upload-area i{font-size:2rem;color:var(--primary);margin-bottom:10px}
+
+/* ===== BATTERY SAVER MODE ===== */
+body.battery-saver .visualizer-canvas{opacity:0!important;display:none}
+body.battery-saver .hero{background:var(--bg-dark)}
+body.battery-saver .player-vinyl.spinning{animation-duration:8s}
+body.battery-saver .gradient-text{background:linear-gradient(135deg,#fff,var(--primary));-webkit-background-clip:text;background-clip:text}
+body.battery-saver .song-row:hover{transform:none}
+body.battery-saver .toast{animation:none}
+.battery-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(244,67,54,0.15);color:#f44336;border-radius:8px;font-size:0.75rem;font-weight:600;margin-left:8px}
+.battery-badge.safe{background:rgba(76,175,80,0.15);color:#4caf50}
+
+/* ===== BACKUP SECTION ===== */
+.backup-section{margin-top:20px;padding-top:20px;border-top:1px solid var(--bg-glass-border)}
+.backup-section h4{margin-bottom:12px;font-size:0.95rem}
+.backup-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.backup-btn{padding:12px;background:rgba(255,255,255,0.03);border:1px solid var(--bg-glass-border);border-radius:10px;color:var(--text-primary);cursor:pointer;font-family:inherit;font-size:0.85rem;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;transition:0.2s}
+.backup-btn:hover{background:rgba(233,30,99,0.1);border-color:var(--primary);color:var(--primary)}
+.backup-btn.export{background:rgba(76,175,80,0.1);border-color:rgba(76,175,80,0.3);color:#4caf50}
+.backup-btn.export:hover{background:rgba(76,175,80,0.2)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px;background:rgba(255,255,255,0.03);border-radius:10px;margin-bottom:10px}
+.toggle-row span{font-size:0.9rem}
+.toggle-switch{position:relative;width:44px;height:24px;background:rgba(255,255,255,0.1);border-radius:12px;cursor:pointer;transition:0.3s}
+.toggle-switch.active{background:var(--primary)}
+.toggle-switch::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:0.3s}
+.toggle-switch.active::after{left:22px}
+
+@media(max-width:768px){.player-main{padding:10px 15px;gap:12px}.player-extra{padding:0 15px 8px}.player-progress{padding:0 15px 10px}.player-controls{gap:4px}.player-controls button{width:32px;height:32px;font-size:0.85rem}.play-pause-main{width:40px!important;height:40px!important}.toast-container{left:20px;right:20px}.toast{max-width:100%}.backup-buttons{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <input type="file" id="musicUpload" accept="audio/*" multiple style="display:none">
 <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+<input type="file" id="lrcUpload" accept=".lrc,.txt" style="display:none">
+<input type="file" id="backupImport" accept=".json" style="display:none">
 
 <nav class="navbar">
     <a href="#" class="logo">
@@ -178,7 +221,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 <div class="modal-overlay" id="profileModal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Profil Saya</h3>
+            <h3>Profil Saya <span id="batteryBadge" class="battery-badge safe" style="display:none"><i class="fas fa-battery-quarter"></i> <span id="batteryText">100%</span></span></h3>
             <button class="close-modal"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
@@ -195,6 +238,24 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
                 <div class="stat-card"><i class="fas fa-clock"></i><div class="stat-card-value" id="statTotalHours">0 Menit</div><div class="stat-card-label">Total Dengar</div></div>
                 <div class="stat-card"><i class="fas fa-play"></i><div class="stat-card-value" id="statTotalPlays">0</div><div class="stat-card-label">Total Play</div></div>
                 <div class="stat-card"><i class="fas fa-heart"></i><div class="stat-card-value" id="statTotalFav">0</div><div class="stat-card-label">Favorit</div></div>
+            </div>
+            
+            <!-- Battery Saver Toggle -->
+            <h4 style="margin-bottom:12px;font-size:0.95rem">🔋 Mode Hemat Baterai</h4>
+            <div class="toggle-row">
+                <span>Aktifkan manual</span>
+                <div class="toggle-switch" id="batterySaverToggle"></div>
+            </div>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:16px">Otomatis aktif saat baterai < 20%. Visualizer & animasi dimatikan.</p>
+            
+            <!-- Backup Section -->
+            <div class="backup-section">
+                <h4>💾 Backup & Ekspor Data</h4>
+                <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:12px">Simpan metadata, playlist, lirik & favorit ke file JSON.</p>
+                <div class="backup-buttons">
+                    <button class="backup-btn export" id="exportBackupBtn"><i class="fas fa-download"></i> Ekspor</button>
+                    <button class="backup-btn" id="importBackupBtn"><i class="fas fa-upload"></i> Impor</button>
+                </div>
             </div>
         </div>
     </div>
@@ -250,17 +311,57 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 <div class="modal-overlay" id="sleepTimerModal">
     <div class="modal-content" style="max-width: 400px;">
         <div class="modal-header">
-            <h3>Mode Tidur</h3>
+            <h3>🌙 Mode Tidur</h3>
             <button class="close-modal"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
+            <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:16px;text-align:center">Atur waktu agar musik otomatis berhenti</p>
             <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                <button class="sleep-time-btn" data-min="15">15 Menit</button>
-                <button class="sleep-time-btn" data-min="30">30 Menit</button>
-                <button class="sleep-time-btn" data-min="60">60 Menit</button>
-                <button class="sleep-time-btn" data-min="0" style="background: rgba(244, 67, 54, 0.1); color: #f44336; border-color: rgba(244, 67, 54, 0.3);">Matikan</button>
+                <button class="sleep-time-btn" data-min="15">⏱️ 15 Menit</button>
+                <button class="sleep-time-btn" data-min="30">⏱️ 30 Menit</button>
+                <button class="sleep-time-btn" data-min="60">⏱️ 60 Menit</button>
+                <button class="sleep-time-btn" data-min="90">⏱️ 90 Menit</button>
+                <button class="sleep-time-btn" data-min="0" style="grid-column: span 2; background: rgba(244, 67, 54, 0.1); color: #f44336; border-color: rgba(244, 67, 54, 0.3);">❌ Matikan Mode Tidur</button>
             </div>
             <div id="sleepTimerStatus" style="text-align:center; margin-top:24px; color: var(--text-secondary); font-size: 0.95rem; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">Mode tidur tidak aktif</div>
+        </div>
+    </div>
+</div>
+
+<!-- Lyrics Modal -->
+<div class="modal-overlay" id="lyricsModal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h3 id="lyricsTitle">🎤 Lirik Lagu</h3>
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <div id="lyricsView">
+                <div class="lyrics-container" id="lyricsContainer">
+                    <p style="text-align:center;color:var(--text-muted);padding:40px 0">Belum ada lirik untuk lagu ini</p>
+                </div>
+                <button class="add-playlist-btn" id="editLyricsBtn" style="margin-top:16px"><i class="fas fa-edit"></i> Tambah/Edit Lirik</button>
+            </div>
+            <div id="lyricsEditor" style="display:none">
+                <div class="lyric-tabs">
+                    <button class="lyric-tab active" data-mode="paste">📝 Paste Manual</button>
+                    <button class="lyric-tab" data-mode="upload">📁 Upload .LRC</button>
+                </div>
+                <div id="lyricPasteArea">
+                    <textarea class="lyric-editor" id="lyricTextarea" placeholder="Paste lirik di sini...&#10;&#10;Format LRC:&#10;[00:12.50] Baris lirik pertama&#10;[00:15.30] Baris lirik kedua&#10;&#10;Atau teks biasa (tanpa timestamp)"></textarea>
+                </div>
+                <div id="lyricUploadArea" style="display:none">
+                    <div class="lyric-upload-area" id="lyricDropZone">
+                        <i class="fas fa-file-audio"></i>
+                        <p style="font-weight:600;margin-bottom:4px">Klik untuk upload file .LRC</p>
+                        <p style="font-size:0.8rem;color:var(--text-muted)">Format: .lrc atau .txt</p>
+                    </div>
+                </div>
+                <div style="display:flex;gap:10px;margin-top:16px">
+                    <button class="backup-btn" id="cancelLyricBtn" style="flex:1">Batal</button>
+                    <button class="backup-btn export" id="saveLyricBtn" style="flex:1"><i class="fas fa-save"></i> Simpan</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -284,7 +385,6 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
             <button id="playPauseBtn" class="play-pause-main"><i class="fas fa-play"></i></button>
             <button id="nextBtn" title="Berikutnya"><i class="fas fa-step-forward"></i></button>
             <button id="repeatBtn" title="Ulangi"><i class="fas fa-redo"></i></button>
-            <button id="sleepTimerBtn" title="Mode Tidur"><i class="fas fa-moon"></i></button>
         </div>
         <button id="favBtn" title="Favorit" style="background:none;border:none;color:var(--text-secondary);font-size:1rem;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="far fa-heart"></i></button>
     </div>
@@ -293,6 +393,12 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
             <i class="fas fa-volume-up" id="volumeIcon"></i>
             <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="80">
         </div>
+        <button id="lyricsBtn" title="Lirik" style="background:none;border:1px solid var(--bg-glass-border);color:var(--text-secondary);font-size:0.9rem;cursor:pointer;padding:8px 14px;border-radius:10px;display:flex;align-items:center;gap:6px;font-family:inherit;white-space:nowrap">
+            <i class="fas fa-align-center"></i> <span>Lirik</span>
+        </button>
+        <button id="sleepTimerBtn" title="Mode Tidur" style="background:none;border:1px solid var(--bg-glass-border);color:var(--text-secondary);font-size:0.9rem;cursor:pointer;padding:8px 14px;border-radius:10px;display:flex;align-items:center;gap:6px;font-family:inherit;white-space:nowrap">
+            <i class="fas fa-moon"></i> <span id="sleepTimerLabel">Tidur</span>
+        </button>
     </div>
     <div class="player-progress">
         <span id="currentTime">0:00</span>
@@ -357,6 +463,17 @@ let listenTimeInterval = null;
 // Sleep Timer State
 let sleepTimerTarget = 0;
 let sleepTimerInterval = null;
+
+// Battery Saver State
+let batterySaverMode = localStorage.getItem('batterySaverMode') === 'true';
+let batteryLevel = 1;
+let isCharging = false;
+
+// Lyrics State
+let parsedLyrics = [];
+let currentLyricIndex = -1;
+let editingLyricSongId = null;
+let pendingLyricText = '';
 
 // ================= UI HELPERS =================
 function showToast(message, type = 'info') {
@@ -466,6 +583,7 @@ resizeVisualizer();
 function drawVisualizer() {
     requestAnimationFrame(drawVisualizer);
     if (!analyser) return;
+    if (batterySaverMode) return; // Matikan visualizer saat mode hemat
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     analyser.getByteFrequencyData(dataArray);
@@ -529,6 +647,7 @@ async function renderSongList() {
                 </div>
                 <div class="song-row-actions">
                     <button class="fav-btn ${song.isFavorite ? 'active' : ''}" data-id="${song.id}" data-action="fav"><i class="fa${song.isFavorite ? 's' : 'r'} fa-heart"></i></button>
+                    <button data-id="${song.id}" data-action="lyrics" title="Lirik"><i class="fas fa-align-center"></i></button>
                     <button data-id="${song.id}" data-action="addtoplaylist"><i class="fas fa-plus"></i></button>
                     <button data-id="${song.id}" data-action="delete"><i class="fas fa-trash"></i></button>
                 </div>
@@ -540,7 +659,6 @@ async function renderSongList() {
     }
 }
 
-// Event delegation untuk song list
 document.getElementById('songList').addEventListener('click', async (e) => {
     const actionBtn = e.target.closest('[data-action]');
     if (actionBtn) {
@@ -559,6 +677,10 @@ document.getElementById('songList').addEventListener('click', async (e) => {
             renderSongList();
             updateStats();
             showToast(s.isFavorite ? '❤️ Ditambahkan ke favorit' : 'Dihapus dari favorit', 'success');
+        }
+        else if (action === 'lyrics') {
+            editingLyricSongId = id;
+            openLyricsModal(id);
         }
         else if (action === 'addtoplaylist') {
             currentAddToPlaylistSongId = id;
@@ -650,6 +772,15 @@ async function playSong(song) {
             }
         }, 1000);
         
+        // Parse lyrics if available
+        if (song.lrc) {
+            parsedLyrics = parseLRC(song.lrc);
+        } else {
+            parsedLyrics = [];
+        }
+        currentLyricIndex = -1;
+        renderLyricsView();
+        
         renderSongList();
         updateStats();
     } catch(err) {
@@ -722,7 +853,7 @@ async function handleUpload(e) {
         
         await DB.addSong({
             name: tags.name, artist: tags.artist, album: tags.album, coverArt: tags.coverArt,
-            file: file, isFavorite: false, playCount: 0, lastPlayed: null, dateAdded: Date.now()
+            file: file, isFavorite: false, playCount: 0, lastPlayed: null, dateAdded: Date.now(), lrc: null
         });
     }
     
@@ -907,10 +1038,19 @@ function startSleepTimer(minutes) {
 
 function updateSleepTimerUI() {
     const btn = document.getElementById('sleepTimerBtn');
+    const label = document.getElementById('sleepTimerLabel');
     const status = document.getElementById('sleepTimerStatus');
     
     if (sleepTimerTarget > 0) {
-        btn.classList.add('active-mode');
+        btn.style.borderColor = 'var(--primary)';
+        btn.style.color = 'var(--primary)';
+        btn.style.background = 'rgba(233,30,99,0.1)';
+        if (label) {
+            const remaining = Math.ceil((sleepTimerTarget - Date.now()) / 1000);
+            const m = Math.floor(remaining / 60);
+            const s = remaining % 60;
+            label.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+        }
         if (status) {
             const remaining = Math.ceil((sleepTimerTarget - Date.now()) / 1000);
             const m = Math.floor(remaining / 60);
@@ -920,12 +1060,299 @@ function updateSleepTimerUI() {
             status.style.background = 'rgba(233, 30, 99, 0.1)';
         }
     } else {
-        btn.classList.remove('active-mode');
+        btn.style.borderColor = 'var(--bg-glass-border)';
+        btn.style.color = 'var(--text-secondary)';
+        btn.style.background = 'transparent';
+        if (label) label.textContent = 'Tidur';
         if (status) {
             status.textContent = 'Mode tidur tidak aktif';
             status.style.color = 'var(--text-secondary)';
             status.style.background = 'rgba(255,255,255,0.03)';
         }
+    }
+}
+
+// ================= LYRICS =================
+function parseLRC(lrcText) {
+    if (!lrcText) return [];
+    const lines = lrcText.split('\n');
+    const lyrics = [];
+    const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/;
+    
+    for (const line of lines) {
+        const match = line.match(timeRegex);
+        if (match) {
+            const mins = parseInt(match[1]);
+            const secs = parseInt(match[2]);
+            const ms = parseInt(match[3].padEnd(3, '0'));
+            const time = mins * 60 + secs + ms / 1000;
+            const text = line.replace(timeRegex, '').trim();
+            if (text) lyrics.push({ time, text });
+        }
+    }
+    return lyrics.sort((a, b) => a.time - b.time);
+}
+
+function renderLyricsView() {
+    const container = document.getElementById('lyricsContainer');
+    if (!container) return;
+    
+    if (parsedLyrics.length === 0) {
+        container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:40px 0">Belum ada lirik untuk lagu ini</p>';
+        return;
+    }
+    
+    container.innerHTML = parsedLyrics.map((l, i) => 
+        `<div class="lyric-line ${i === currentLyricIndex ? 'active' : ''}" data-index="${i}">${l.text}</div>`
+    ).join('');
+    
+    // Auto scroll to active line
+    if (currentLyricIndex >= 0) {
+        const activeLine = container.querySelector('.lyric-line.active');
+        if (activeLine) {
+            activeLine.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    }
+    
+    // Click to seek
+    container.querySelectorAll('.lyric-line').forEach(el => {
+        el.addEventListener('click', () => {
+            const idx = parseInt(el.dataset.index);
+            const audio = document.getElementById('audioElement');
+            audio.currentTime = parsedLyrics[idx].time;
+        });
+    });
+}
+
+async function openLyricsModal(songId) {
+    const songs = await DB.getAllSongs();
+    const song = songs.find(s => s.id === songId);
+    if (!song) return;
+    
+    document.getElementById('lyricsTitle').textContent = `🎤 ${song.name}`;
+    document.getElementById('lyricsView').style.display = 'block';
+    document.getElementById('lyricsEditor').style.display = 'none';
+    
+    if (song.lrc) {
+        parsedLyrics = parseLRC(song.lrc);
+    } else {
+        parsedLyrics = [];
+    }
+    currentLyricIndex = -1;
+    renderLyricsView();
+    
+    document.getElementById('lyricsModal').classList.add('active');
+}
+
+// Sync lyrics with audio time
+function syncLyrics() {
+    if (parsedLyrics.length === 0 || !currentSong) return;
+    const audio = document.getElementById('audioElement');
+    const currentTime = audio.currentTime;
+    
+    let newIndex = -1;
+    for (let i = 0; i < parsedLyrics.length; i++) {
+        if (currentTime >= parsedLyrics[i].time) {
+            newIndex = i;
+        } else {
+            break;
+        }
+    }
+    
+    if (newIndex !== currentLyricIndex) {
+        currentLyricIndex = newIndex;
+        renderLyricsView();
+    }
+}
+
+// ================= BATTERY SAVER =================
+function applyBatterySaverMode(enabled) {
+    batterySaverMode = enabled;
+    localStorage.setItem('batterySaverMode', enabled ? 'true' : 'false');
+    
+    if (enabled) {
+        document.body.classList.add('battery-saver');
+        showToast('🔋 Mode hemat baterai aktif', 'info');
+    } else {
+        document.body.classList.remove('battery-saver');
+        showToast('✨ Mode hemat baterai nonaktif', 'info');
+    }
+    
+    // Update toggle UI
+    const toggle = document.getElementById('batterySaverToggle');
+    if (toggle) toggle.classList.toggle('active', enabled);
+}
+
+async function initBatteryMonitor() {
+    if (!navigator.getBattery) return;
+    try {
+        const battery = await navigator.getBattery();
+        batteryLevel = battery.level;
+        isCharging = battery.charging;
+        
+        function updateBatteryUI() {
+            const badge = document.getElementById('batteryBadge');
+            const text = document.getElementById('batteryText');
+            if (!badge || !text) return;
+            
+            const percent = Math.round(batteryLevel * 100);
+            text.textContent = `${percent}%`;
+            badge.style.display = 'inline-flex';
+            
+            if (battery.charging) {
+                badge.className = 'battery-badge safe';
+                badge.innerHTML = `<i class="fas fa-bolt"></i> <span>${percent}% (Charging)</span>`;
+            } else if (batteryLevel <= 0.2) {
+                badge.className = 'battery-badge';
+                badge.innerHTML = `<i class="fas fa-battery-quarter"></i> <span>${percent}% (Hemat)</span>`;
+                if (!batterySaverMode) applyBatterySaverMode(true);
+            } else {
+                badge.className = 'battery-badge safe';
+                badge.innerHTML = `<i class="fas fa-battery-full"></i> <span>${percent}%</span>`;
+            }
+        }
+        
+        updateBatteryUI();
+        battery.addEventListener('levelchange', () => { batteryLevel = battery.level; updateBatteryUI(); });
+        battery.addEventListener('chargingchange', () => { isCharging = battery.charging; updateBatteryUI(); });
+    } catch(e) {
+        console.log('Battery API not available');
+    }
+}
+
+// ================= BACKUP & EXPORT =================
+async function exportBackup() {
+    try {
+        showToast('Mempersiapkan backup...', 'info');
+        const songs = await DB.getAllSongs();
+        const playlists = await DB.getAllPlaylists();
+        
+        // Extract metadata only (no blob files)
+        const songsMeta = songs.map(s => ({
+            id: s.id,
+            name: s.name,
+            artist: s.artist,
+            album: s.album,
+            coverArt: s.coverArt,
+            isFavorite: s.isFavorite,
+            playCount: s.playCount,
+            lastPlayed: s.lastPlayed,
+            dateAdded: s.dateAdded,
+            lrc: s.lrc || null
+        }));
+        
+        const backupData = {
+            version: '1.0',
+            exportDate: new Date().toISOString(),
+            appName: 'Music Flow',
+            profile: {
+                name: localStorage.getItem('musicFlowUserName') || 'Music Lover',
+                avatar: localStorage.getItem('musicFlowUserAvatar') || null
+            },
+            stats: {
+                totalListenTime: totalListenTime,
+                totalPlays: totalPlays
+            },
+            songs: songsMeta,
+            playlists: playlists
+        };
+        
+        const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `musicflow-backup-${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        showToast(`✅ Backup berhasil! ${songs.length} lagu, ${playlists.length} playlist`, 'success');
+    } catch(err) {
+        console.error('Export error:', err);
+        showToast('Gagal membuat backup', 'error');
+    }
+}
+
+async function importBackup(file) {
+    try {
+        const text = await file.text();
+        const data = JSON.parse(text);
+        
+        if (!data.version || !data.songs || !data.playlists) {
+            throw new Error('Format file tidak valid');
+        }
+        
+        if (!confirm(`Impor backup?\n\n${data.songs.length} lagu\n${data.playlists.length} playlist\n\n⚠️ Data yang ada akan digabung. File audio harus di-upload ulang.`)) {
+            return;
+        }
+        
+        showToast('Mengimpor data...', 'info');
+        
+        // Import profile
+        if (data.profile) {
+            if (data.profile.name) localStorage.setItem('musicFlowUserName', data.profile.name);
+            if (data.profile.avatar) localStorage.setItem('musicFlowUserAvatar', data.profile.avatar);
+        }
+        
+        // Import stats
+        if (data.stats) {
+            if (data.stats.totalListenTime !== undefined) {
+                totalListenTime = data.stats.totalListenTime;
+                localStorage.setItem('totalListenTime', totalListenTime);
+            }
+            if (data.stats.totalPlays !== undefined) {
+                totalPlays = data.stats.totalPlays;
+                localStorage.setItem('totalPlays', totalPlays);
+            }
+        }
+        
+        // Import songs (metadata only, without file blob)
+        const existingSongs = await DB.getAllSongs();
+        let importedCount = 0;
+        
+        for (const songMeta of data.songs) {
+            // Check if song already exists by name
+            const exists = existingSongs.find(s => s.name === songMeta.name && s.artist === songMeta.artist);
+            if (exists) {
+                // Update metadata only
+                exists.isFavorite = songMeta.isFavorite;
+                exists.playCount = songMeta.playCount;
+                exists.lrc = songMeta.lrc;
+                await DB.updateSong(exists);
+            } else {
+                // Add new song (without file - user needs to re-upload)
+                await DB.addSong({
+                    ...songMeta,
+                    file: null, // No file blob
+                    imported: true
+                });
+                importedCount++;
+            }
+        }
+        
+        // Import playlists
+        const existingPlaylists = await DB.getAllPlaylists();
+        for (const pl of data.playlists) {
+            const exists = existingPlaylists.find(p => p.name === pl.name);
+            if (exists) {
+                exists.songIds = pl.songIds;
+                await DB.updatePlaylist(exists);
+            } else {
+                await DB.addPlaylist(pl);
+            }
+        }
+        
+        // Update UI
+        document.getElementById('userNameInput').value = data.profile?.name || 'Music Lover';
+        updateProfileAvatar(data.profile?.name || 'Music Lover');
+        await renderSongList();
+        await updateStats();
+        
+        showToast(`✅ Impor berhasil! ${importedCount} lagu baru (perlu upload ulang file audio)`, 'success');
+    } catch(err) {
+        console.error('Import error:', err);
+        showToast('Gagal mengimpor: ' + err.message, 'error');
     }
 }
 
@@ -937,15 +1364,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('userNameInput').value = savedName;
     updateProfileAvatar(savedName);
     
+    // Apply saved battery saver mode
+    if (batterySaverMode) {
+        document.body.classList.add('battery-saver');
+    }
+    
     await renderSongList();
     await updateStats();
+    await initBatteryMonitor();
     
-    // Upload
     document.getElementById('musicUpload').addEventListener('change', handleUpload);
     document.getElementById('navUploadBtn').addEventListener('click', () => document.getElementById('musicUpload').click());
     document.getElementById('searchInput').addEventListener('input', renderSongList);
     
-    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -956,11 +1387,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
     
-    // Profile & Avatar
     const profileModal = document.getElementById('profileModal');
     document.getElementById('profileBtn').addEventListener('click', async () => {
         profileModal.classList.add('active');
         await updateStats();
+        // Update battery saver toggle
+        document.getElementById('batterySaverToggle').classList.toggle('active', batterySaverMode);
     });
     profileModal.querySelector('.close-modal').addEventListener('click', () => profileModal.classList.remove('active'));
     profileModal.addEventListener('click', (e) => { if (e.target === profileModal) profileModal.classList.remove('active'); });
@@ -1010,7 +1442,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Nama diperbarui!', 'success');
     });
     
-    // Playlist modal
+    // Battery saver toggle
+    document.getElementById('batterySaverToggle').addEventListener('click', () => {
+        applyBatterySaverMode(!batterySaverMode);
+    });
+    
+    // Backup buttons
+    document.getElementById('exportBackupBtn').addEventListener('click', exportBackup);
+    document.getElementById('importBackupBtn').addEventListener('click', () => document.getElementById('backupImport').click());
+    document.getElementById('backupImport').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) importBackup(file);
+        e.target.value = '';
+    });
+    
     const playlistsModal = document.getElementById('playlistsModal');
     playlistsModal.querySelector('.close-modal').addEventListener('click', () => playlistsModal.classList.remove('active'));
     playlistsModal.addEventListener('click', (e) => { if (e.target === playlistsModal) playlistsModal.classList.remove('active'); });
@@ -1030,8 +1475,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Playlist dibuat!', 'success');
     });
     
-    // Close modals helper
-    ['playlistDetailModal', 'addToPlaylistModal', 'sleepTimerModal'].forEach(modalId => {
+    ['playlistDetailModal', 'addToPlaylistModal', 'sleepTimerModal', 'lyricsModal'].forEach(modalId => {
         const modal = document.getElementById(modalId);
         modal.querySelector('.close-modal').addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
@@ -1051,7 +1495,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
     
-    // Player controls
+    // Lyrics Button (player)
+    document.getElementById('lyricsBtn').addEventListener('click', () => {
+        if (!currentSong) {
+            showToast('Pilih lagu dulu', 'error');
+            return;
+        }
+        openLyricsModal(currentSong.id);
+    });
+    
+    // Lyrics modal interactions
+    document.getElementById('editLyricsBtn').addEventListener('click', () => {
+        document.getElementById('lyricsView').style.display = 'none';
+        document.getElementById('lyricsEditor').style.display = 'block';
+        document.getElementById('lyricTextarea').value = currentSong?.lrc || '';
+    });
+    
+    document.getElementById('cancelLyricBtn').addEventListener('click', () => {
+        document.getElementById('lyricsView').style.display = 'block';
+        document.getElementById('lyricsEditor').style.display = 'none';
+    });
+    
+    document.getElementById('saveLyricBtn').addEventListener('click', async () => {
+        if (!editingLyricSongId) return;
+        const text = document.getElementById('lyricTextarea').value.trim();
+        const songs = await DB.getAllSongs();
+        const song = songs.find(s => s.id === editingLyricSongId);
+        if (!song) return;
+        
+        song.lrc = text || null;
+        await DB.updateSong(song);
+        
+        if (currentSong && currentSong.id === editingLyricSongId) {
+            parsedLyrics = parseLRC(song.lrc);
+            currentLyricIndex = -1;
+            renderLyricsView();
+        }
+        
+        document.getElementById('lyricsView').style.display = 'block';
+        document.getElementById('lyricsEditor').style.display = 'none';
+        showToast('✅ Lirik disimpan!', 'success');
+    });
+    
+    // Lyric tabs
+    document.querySelectorAll('.lyric-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.lyric-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const mode = tab.dataset.mode;
+            document.getElementById('lyricPasteArea').style.display = mode === 'paste' ? 'block' : 'none';
+            document.getElementById('lyricUploadArea').style.display = mode === 'upload' ? 'block' : 'none';
+        });
+    });
+    
+    // LRC upload
+    document.getElementById('lyricDropZone').addEventListener('click', () => document.getElementById('lrcUpload').click());
+    document.getElementById('lrcUpload').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        try {
+            const text = await file.text();
+            document.getElementById('lyricTextarea').value = text;
+            showToast('✅ File LRC dimuat!', 'success');
+        } catch(err) {
+            showToast('Gagal membaca file', 'error');
+        }
+        e.target.value = '';
+    });
+    
     const audio = document.getElementById('audioElement');
     const playPauseBtn = document.getElementById('playPauseBtn');
     const progressBar = document.getElementById('progressBar');
@@ -1100,6 +1611,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('currentTime').textContent = formatTime(audio.currentTime);
             document.getElementById('duration').textContent = formatTime(audio.duration);
         }
+        syncLyrics();
     });
     
     progressBar.addEventListener('input', (e) => {
