@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#e91e63">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Music Flow - Vibes Without Borders</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
@@ -37,7 +36,7 @@
         .btn-primary:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 30px rgba(233,30,99,0.5)}
         .profile-btn{width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;border:2px solid var(--bg-glass-border);transition:0.3s;background:var(--bg-glass)}
         .profile-btn:hover{border-color:var(--primary);transform:scale(1.05)}
-        .profile-avatar{width:100%;height:100%;object-fit:cover}
+        .profile-avatar{width:100%;height:100%;object-fit:cover;display:block}
         .hero{min-height:100vh;display:flex;align-items:center;padding:140px 5% 80px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 70% 30%,rgba(120,50,180,0.35) 0%,transparent 60%),radial-gradient(ellipse at 30% 70%,rgba(233,30,99,0.2) 0%,transparent 50%)}
         .hero::before{content:'';position:absolute;top:-50%;right:-20%;width:800px;height:800px;background:radial-gradient(circle,rgba(120,50,180,0.4) 0%,transparent 70%);border-radius:50%;animation:heroGlow 8s ease-in-out infinite;filter:blur(60px)}
         @keyframes heroGlow{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.2);opacity:0.9}}
@@ -112,10 +111,50 @@
         .close-modal:hover{color:var(--primary);background:rgba(255,255,255,0.05)}
         .modal-body{flex:1;overflow-y:auto;padding:20px 24px}
         .profile-info{text-align:center;padding:20px 0;border-bottom:1px solid var(--bg-glass-border);margin-bottom:20px}
-        .profile-avatar-wrapper{position:relative;display:inline-block;margin-bottom:12px}
-        .profile-avatar-large{width:90px;height:90px;border-radius:50%;border:3px solid var(--primary);object-fit:cover;display:block}
-        .profile-edit-btn{position:absolute;bottom:0;right:0;width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;border:2px solid var(--bg-dark);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;transition:0.3s;box-shadow:0 4px 10px var(--primary-glow)}
-        .profile-edit-btn:hover{transform:scale(1.1)}
+        
+        /* ===== PERBAIKAN: Profile Avatar Wrapper ===== */
+        .profile-avatar-wrapper{position:relative;display:inline-block;margin-bottom:12px;cursor:pointer;z-index:1}
+        .profile-avatar-large{width:100px;height:100px;border-radius:50%;border:3px solid var(--primary);object-fit:cover;display:block;transition:0.3s}
+        .profile-avatar-wrapper:hover .profile-avatar-large{filter:brightness(0.7);transform:scale(1.05)}
+        .profile-edit-btn{
+            position:absolute;
+            bottom:4px;
+            right:4px;
+            width:36px;
+            height:36px;
+            border-radius:50%;
+            background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+            color:#fff;
+            border:3px solid var(--bg-dark);
+            cursor:pointer;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-size:0.9rem;
+            transition:all 0.3s;
+            box-shadow:0 4px 15px var(--primary-glow);
+            z-index:10;
+            pointer-events:auto;
+        }
+        .profile-edit-btn:hover{transform:scale(1.15) rotate(10deg);box-shadow:0 6px 20px rgba(233,30,99,0.6)}
+        .profile-edit-btn:active{transform:scale(0.95)}
+        .avatar-overlay{
+            position:absolute;
+            inset:0;
+            border-radius:50%;
+            background:rgba(0,0,0,0.5);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            opacity:0;
+            transition:0.3s;
+            color:#fff;
+            font-size:0.8rem;
+            font-weight:600;
+            pointer-events:none;
+        }
+        .profile-avatar-wrapper:hover .avatar-overlay{opacity:1}
+        
         .name-input{background:rgba(255,255,255,0.05);border:1px solid var(--bg-glass-border);color:var(--text-primary);padding:10px 16px;border-radius:10px;font-size:1rem;text-align:center;width:80%;margin-bottom:8px;font-family:inherit;transition:0.3s}
         .name-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 15px var(--primary-glow)}
         .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
@@ -343,9 +382,10 @@
             </div>
             <div class="modal-body">
                 <div class="profile-info">
-                    <div class="profile-avatar-wrapper">
+                    <div class="profile-avatar-wrapper" id="avatarWrapper">
                         <img id="modalAvatar" src="https://ui-avatars.com/api/?name=User&background=e91e63&color=fff" alt="Profile" class="profile-avatar-large">
-                        <button class="profile-edit-btn" id="editAvatarBtn" title="Ubah Foto Profil"><i class="fas fa-camera"></i></button>
+                        <div class="avatar-overlay"><i class="fas fa-camera"></i>&nbsp;Ubah Foto</div>
+                        <button class="profile-edit-btn" id="editAvatarBtn" type="button" title="Ubah Foto Profil"><i class="fas fa-camera"></i></button>
                     </div>
                     <input type="text" id="userNameInput" value="Music Lover" class="name-input" placeholder="Masukkan Namamu">
                 </div>
@@ -532,28 +572,20 @@
     <script>
         // ================= PWA SETUP =================
         const manifest = {
-            name: "Music Flow",
-            short_name: "MusicFlow",
-            start_url: ".",
-            display: "standalone",
-            background_color: "#0a0a0f",
-            theme_color: "#e91e63",
-            orientation: "portrait",
+            name: "Music Flow", short_name: "MusicFlow", start_url: ".", display: "standalone",
+            background_color: "#0a0a0f", theme_color: "#e91e63", orientation: "portrait",
             icons: [{
                 src: "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" fill="#e91e63"/><text x="96" y="130" font-size="120" text-anchor="middle" fill="white" font-family="Arial">♪</text></svg>'),
-                sizes: "192x192",
-                type: "image/svg+xml"
+                sizes: "192x192", type: "image/svg+xml"
             }, {
                 src: "data:image/svg+xml;base64," + btoa('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" fill="#e91e63"/><text x="256" y="350" font-size="320" text-anchor="middle" fill="white" font-family="Arial">♪</text></svg>'),
-                sizes: "512x512",
-                type: "image/svg+xml"
+                sizes: "512x512", type: "image/svg+xml"
             }]
         };
         const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
         const manifestURL = URL.createObjectURL(manifestBlob);
         const manifestLink = document.createElement('link');
-        manifestLink.rel = 'manifest';
-        manifestLink.href = manifestURL;
+        manifestLink.rel = 'manifest'; manifestLink.href = manifestURL;
         document.head.appendChild(manifestLink);
 
         if ('serviceWorker' in navigator) {
@@ -565,10 +597,7 @@
                     if (e.request.method !== 'GET') return;
                     e.respondWith(
                         caches.match(e.request).then(r => r || fetch(e.request).then(res => {
-                            if (res.status === 200) {
-                                const clone = res.clone();
-                                caches.open(CACHE).then(c => c.put(e.request, clone));
-                            }
+                            if (res.status === 200) { const clone = res.clone(); caches.open(CACHE).then(c => c.put(e.request, clone)); }
                             return res;
                         }).catch(() => caches.match('/')))
                     );
@@ -581,11 +610,8 @@
 
         let deferredPrompt = null;
         window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if (!localStorage.getItem('pwaDismissed')) {
-                document.getElementById('pwaBanner').classList.add('active');
-            }
+            e.preventDefault(); deferredPrompt = e;
+            if (!localStorage.getItem('pwaDismissed')) document.getElementById('pwaBanner').classList.add('active');
         });
         document.getElementById('pwaInstallBtn').addEventListener('click', async () => {
             if (deferredPrompt) {
@@ -613,12 +639,8 @@
                 request.onsuccess = () => { db = request.result; resolve(db); };
                 request.onupgradeneeded = (event) => {
                     const database = event.target.result;
-                    if (!database.objectStoreNames.contains('songs')) {
-                        database.createObjectStore('songs', { keyPath: 'id', autoIncrement: true });
-                    }
-                    if (!database.objectStoreNames.contains('playlists')) {
-                        database.createObjectStore('playlists', { keyPath: 'id', autoIncrement: true });
-                    }
+                    if (!database.objectStoreNames.contains('songs')) database.createObjectStore('songs', { keyPath: 'id', autoIncrement: true });
+                    if (!database.objectStoreNames.contains('playlists')) database.createObjectStore('playlists', { keyPath: 'id', autoIncrement: true });
                 };
             });
         }
@@ -658,13 +680,8 @@
         let listenTimeInterval = null;
 
         const EQ_PRESETS = {
-            flat: [0, 0, 0, 0, 0],
-            rock: [5, 3, -1, 2, 4],
-            pop: [-1, 2, 4, 2, -1],
-            jazz: [3, 1, -1, 1, 3],
-            classical: [4, 2, 0, 2, 4],
-            bass: [8, 5, 0, -2, -3],
-            vocal: [-3, -1, 3, 2, 0]
+            flat: [0, 0, 0, 0, 0], rock: [5, 3, -1, 2, 4], pop: [-1, 2, 4, 2, -1],
+            jazz: [3, 1, -1, 1, 3], classical: [4, 2, 0, 2, 4], bass: [8, 5, 0, -2, -3], vocal: [-3, -1, 3, 2, 0]
         };
         const EQ_FREQUENCIES = [60, 250, 1000, 4000, 12000];
         const EQ_LABELS = ['60Hz', '250Hz', '1kHz', '4kHz', '12kHz'];
@@ -682,11 +699,67 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
+        // ===== PERBAIKAN: Fungsi update avatar dengan fallback =====
         function updateProfileAvatar(name) {
             const customAvatar = localStorage.getItem('musicFlowUserAvatar');
-            const url = customAvatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=e91e63&color=fff&size=128`;
-            document.getElementById('navAvatar').src = url;
-            document.getElementById('modalAvatar').src = url;
+            const navAvatar = document.getElementById('navAvatar');
+            const modalAvatar = document.getElementById('modalAvatar');
+            
+            if (customAvatar) {
+                // Cek apakah base64 valid
+                const img = new Image();
+                img.onload = () => {
+                    navAvatar.src = customAvatar;
+                    modalAvatar.src = customAvatar;
+                };
+                img.onerror = () => {
+                    // Fallback ke avatar default kalau base64 rusak
+                    localStorage.removeItem('musicFlowUserAvatar');
+                    const url = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=e91e63&color=fff&size=128`;
+                    navAvatar.src = url;
+                    modalAvatar.src = url;
+                };
+                img.src = customAvatar;
+            } else {
+                const url = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=e91e63&color=fff&size=128`;
+                navAvatar.src = url;
+                modalAvatar.src = url;
+            }
+        }
+
+        // ===== PERBAIKAN: Kompresi gambar otomatis sebelum simpan =====
+        function compressImage(file, maxWidth = 400, quality = 0.85) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        // Resize jika lebih besar dari maxWidth
+                        if (width > maxWidth) {
+                            height = (height * maxWidth) / width;
+                            width = maxWidth;
+                        }
+                        
+                        canvas.width = width;
+                        canvas.height = height;
+                        
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Convert ke base64 dengan kompresi
+                        const base64 = canvas.toDataURL('image/jpeg', quality);
+                        resolve(base64);
+                    };
+                    img.onerror = () => reject(new Error('Gagal memuat gambar'));
+                    img.src = e.target.result;
+                };
+                reader.onerror = () => reject(new Error('Gagal membaca file'));
+                reader.readAsDataURL(file);
+            });
         }
 
         function formatTime(seconds) {
@@ -719,17 +792,11 @@
                 });
 
                 sourceNode = audioContext.createMediaElementSource(document.getElementById('audioElement'));
-                
                 let lastNode = sourceNode;
-                eqFilters.forEach(filter => {
-                    lastNode.connect(filter);
-                    lastNode = filter;
-                });
+                eqFilters.forEach(filter => { lastNode.connect(filter); lastNode = filter; });
                 lastNode.connect(analyser);
                 analyser.connect(audioContext.destination);
-            } catch (err) {
-                console.error('Audio context setup failed:', err);
-            }
+            } catch (err) { console.error('Audio context setup failed:', err); }
         }
 
         // ================= VISUALIZER =================
@@ -746,16 +813,12 @@
         function drawVisualizer() {
             requestAnimationFrame(drawVisualizer);
             if (!analyser) return;
-            
             const bufferLength = analyser.frequencyBinCount;
             const dataArray = new Uint8Array(bufferLength);
             analyser.getByteFrequencyData(dataArray);
-            
             vCtx.clearRect(0, 0, visualizerCanvas.width, visualizerCanvas.height);
-            
             const barWidth = (visualizerCanvas.width / bufferLength) * 2;
             let x = 0;
-            
             for (let i = 0; i < bufferLength; i++) {
                 const barHeight = (dataArray[i] / 255) * visualizerCanvas.height;
                 const gradient = vCtx.createLinearGradient(0, visualizerCanvas.height, 0, visualizerCanvas.height - barHeight);
@@ -773,14 +836,10 @@
             const songs = await DB.getAllSongs();
             const searchQuery = document.getElementById('searchInput').value.toLowerCase();
             const listContainer = document.getElementById('songList');
-            
             let displaySongs = [...songs];
             
-            if (currentTab === 'favorites') {
-                displaySongs = displaySongs.filter(s => s.isFavorite);
-            } else if (currentTab === 'recent') {
-                displaySongs = displaySongs.filter(s => s.lastPlayed).sort((a, b) => b.lastPlayed - a.lastPlayed).slice(0, 20);
-            }
+            if (currentTab === 'favorites') displaySongs = displaySongs.filter(s => s.isFavorite);
+            else if (currentTab === 'recent') displaySongs = displaySongs.filter(s => s.lastPlayed).sort((a, b) => b.lastPlayed - a.lastPlayed).slice(0, 20);
             
             if (searchQuery) {
                 displaySongs = displaySongs.filter(s => 
@@ -791,7 +850,6 @@
             }
             
             displaySongs.sort((a, b) => b.dateAdded - a.dateAdded);
-            
             listContainer.innerHTML = '';
             
             const uploadRow = document.createElement('div');
@@ -821,23 +879,13 @@
                         <div class="song-row-artist">${song.artist || 'Artis Tidak Diketahui'}${song.album ? ' • ' + song.album : ''}</div>
                     </div>
                     <div class="song-row-actions">
-                        <button class="fav-btn ${song.isFavorite ? 'active' : ''}" data-id="${song.id}" title="Favorit">
-                            <i class="fa${song.isFavorite ? 's' : 'r'} fa-heart"></i>
-                        </button>
-                        <button class="add-to-playlist-btn" data-id="${song.id}" title="Tambah ke Playlist">
-                            <i class="fas fa-plus"></i>
-                        </button>
-                        <button class="delete-song-btn" data-id="${song.id}" title="Hapus">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <button class="fav-btn ${song.isFavorite ? 'active' : ''}" data-id="${song.id}" title="Favorit"><i class="fa${song.isFavorite ? 's' : 'r'} fa-heart"></i></button>
+                        <button class="add-to-playlist-btn" data-id="${song.id}" title="Tambah ke Playlist"><i class="fas fa-plus"></i></button>
+                        <button class="delete-song-btn" data-id="${song.id}" title="Hapus"><i class="fas fa-trash"></i></button>
                     </div>
                     <div class="song-row-duration" data-id="${song.id}">--:--</div>
                 `;
-                
-                row.addEventListener('click', (e) => {
-                    if (e.target.closest('button')) return;
-                    playSong(song);
-                });
+                row.addEventListener('click', (e) => { if (e.target.closest('button')) return; playSong(song); });
                 
                 const tempAudio = new Audio();
                 tempAudio.src = URL.createObjectURL(song.file);
@@ -846,7 +894,6 @@
                     if (durEl) durEl.textContent = formatTime(tempAudio.duration);
                     URL.revokeObjectURL(tempAudio.src);
                 });
-                
                 listContainer.appendChild(row);
             });
             
@@ -858,10 +905,7 @@
                     if (!s) return;
                     s.isFavorite = !s.isFavorite;
                     await DB.updateSong(s);
-                    if (currentSong && currentSong.id === id) {
-                        currentSong.isFavorite = s.isFavorite;
-                        updateFavButton();
-                    }
+                    if (currentSong && currentSong.id === id) { currentSong.isFavorite = s.isFavorite; updateFavButton(); }
                     renderSongList();
                     updateStats();
                     showToast(s.isFavorite ? 'Ditambahkan ke favorit ❤️' : 'Dihapus dari favorit', 'success');
@@ -886,11 +930,9 @@
                         document.getElementById('audioElement').pause();
                         document.getElementById('audioElement').src = '';
                         document.getElementById('bottomPlayer').classList.remove('active');
-                        currentSong = null;
-                        currentSongId = null;
+                        currentSong = null; currentSongId = null;
                     }
-                    renderSongList();
-                    updateStats();
+                    renderSongList(); updateStats();
                     showToast('Lagu dihapus', 'success');
                 });
             });
@@ -900,54 +942,35 @@
         async function playSong(song) {
             if (!audioContext) setupAudioContext();
             if (audioContext.state === 'suspended') await audioContext.resume();
-            
-            currentSongId = song.id;
-            currentSong = song;
+            currentSongId = song.id; currentSong = song;
             const audio = document.getElementById('audioElement');
-            
             if (audio.src && audio.src.startsWith('blob:')) URL.revokeObjectURL(audio.src);
             audio.src = URL.createObjectURL(song.file);
             audio.play().catch(() => {});
-            
             document.getElementById('playerTitle').textContent = song.name;
             document.getElementById('playerArtist').textContent = song.artist || 'Artis Tidak Diketahui';
-            
             const coverEl = document.getElementById('playerVinylCover');
-            if (song.coverArt) {
-                coverEl.innerHTML = `<img src="${song.coverArt}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-            } else {
-                coverEl.innerHTML = '<i class="fas fa-music"></i>';
-            }
-            
+            if (song.coverArt) coverEl.innerHTML = `<img src="${song.coverArt}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+            else coverEl.innerHTML = '<i class="fas fa-music"></i>';
             document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-pause"></i>';
             document.getElementById('playerVinyl').classList.add('spinning');
             document.getElementById('bottomPlayer').classList.add('active');
-            
             updateFavButton();
             showToast(`▶ Memutar: ${song.name}`, 'info');
-            
             song.playCount = (song.playCount || 0) + 1;
             song.lastPlayed = Date.now();
             await DB.updateSong(song);
             totalPlays++;
             localStorage.setItem('totalPlays', totalPlays);
-            
             if (listenTimeInterval) clearInterval(listenTimeInterval);
             listenTimeInterval = setInterval(() => {
                 const a = document.getElementById('audioElement');
-                if (!a.paused && !a.ended) {
-                    totalListenTime++;
-                    localStorage.setItem('totalListenTime', totalListenTime);
-                }
+                if (!a.paused && !a.ended) { totalListenTime++; localStorage.setItem('totalListenTime', totalListenTime); }
             }, 1000);
-            
-            renderSongList();
-            updateStats();
-            
+            renderSongList(); updateStats();
             if ('mediaSession' in navigator) {
                 navigator.mediaSession.metadata = new MediaMetadata({
-                    title: song.name,
-                    artist: song.artist || 'Artis Tidak Diketahui',
+                    title: song.name, artist: song.artist || 'Artis Tidak Diketahui',
                     album: song.album || 'Music Flow',
                     artwork: song.coverArt ? [{ src: song.coverArt, sizes: '512x512', type: 'image/jpeg' }] : []
                 });
@@ -961,31 +984,20 @@
         function updateFavButton() {
             const btn = document.getElementById('favBtn');
             if (!currentSong) return;
-            if (currentSong.isFavorite) {
-                btn.innerHTML = '<i class="fas fa-heart" style="color:var(--primary)"></i>';
-            } else {
-                btn.innerHTML = '<i class="far fa-heart"></i>';
-            }
+            btn.innerHTML = currentSong.isFavorite ? '<i class="fas fa-heart" style="color:var(--primary)"></i>' : '<i class="far fa-heart"></i>';
         }
 
         async function playNextSong() {
             const songs = await DB.getAllSongs();
             if (songs.length === 0) return;
             let playlist = [...songs].sort((a, b) => b.dateAdded - a.dateAdded);
-            
-            if (isRepeat) {
-                playSong(currentSong);
-                return;
-            }
-            
+            if (isRepeat) { playSong(currentSong); return; }
             if (isShuffle) {
                 let idx;
                 if (playlist.length === 1) idx = 0;
                 else do { idx = Math.floor(Math.random() * playlist.length); } while (playlist[idx].id === currentSongId);
-                playSong(playlist[idx]);
-                return;
+                playSong(playlist[idx]); return;
             }
-            
             const idx = playlist.findIndex(s => s.id === currentSongId);
             playSong(playlist[(idx + 1) % playlist.length]);
         }
@@ -1005,12 +1017,7 @@
                     jsmediatags.read(file, {
                         onSuccess: (tag) => {
                             const tags = tag.tags;
-                            const result = {
-                                name: tags.title || file.name.replace(/\.[^/.]+$/, ""),
-                                artist: tags.artist || 'Artis Tidak Diketahui',
-                                album: tags.album || '',
-                                coverArt: null
-                            };
+                            const result = { name: tags.title || file.name.replace(/\.[^/.]+$/, ""), artist: tags.artist || 'Artis Tidak Diketahui', album: tags.album || '', coverArt: null };
                             if (tags.picture) {
                                 const { data, format } = tags.picture;
                                 let base64 = '';
@@ -1021,9 +1028,7 @@
                         },
                         onError: () => resolve({ name: file.name.replace(/\.[^/.]+$/, ""), artist: 'Artis Tidak Diketahui', album: '', coverArt: null })
                     });
-                } catch (err) {
-                    resolve({ name: file.name.replace(/\.[^/.]+$/, ""), artist: 'Artis Tidak Diketahui', album: '', coverArt: null });
-                }
+                } catch (err) { resolve({ name: file.name.replace(/\.[^/.]+$/, ""), artist: 'Artis Tidak Diketahui', album: '', coverArt: null }); }
             });
         }
 
@@ -1031,30 +1036,18 @@
         async function handleUpload(e) {
             const files = Array.from(e.target.files);
             if (files.length === 0) return;
-            
             showToast(`Memproses ${files.length} lagu...`, 'info');
-            
             for (const file of files) {
                 if (!file.type.startsWith('audio/')) continue;
                 const tags = await readID3Tags(file);
                 const song = {
-                    name: tags.name,
-                    artist: tags.artist,
-                    album: tags.album,
-                    coverArt: tags.coverArt,
-                    file: file,
-                    lyrics: '',
-                    isFavorite: false,
-                    playCount: 0,
-                    lastPlayed: null,
-                    dateAdded: Date.now()
+                    name: tags.name, artist: tags.artist, album: tags.album, coverArt: tags.coverArt,
+                    file: file, lyrics: '', isFavorite: false, playCount: 0, lastPlayed: null, dateAdded: Date.now()
                 };
                 await DB.addSong(song);
             }
-            
             showToast(`${files.length} lagu berhasil ditambahkan!`, 'success');
-            renderSongList();
-            updateStats();
+            renderSongList(); updateStats();
             e.target.value = '';
         }
 
@@ -1063,12 +1056,10 @@
             const playlists = await DB.getAllPlaylists();
             const container = document.getElementById('playlistList');
             container.innerHTML = '';
-            
             if (playlists.length === 0) {
                 container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">Belum ada playlist</p>';
                 return;
             }
-            
             playlists.forEach(pl => {
                 const item = document.createElement('div');
                 item.className = 'playlist-item';
@@ -1083,10 +1074,7 @@
                         <button class="delete-playlist-btn" data-id="${pl.id}" title="Hapus"><i class="fas fa-trash"></i></button>
                     </div>
                 `;
-                item.querySelector('.open-playlist-btn').addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    openPlaylistDetail(pl.id);
-                });
+                item.querySelector('.open-playlist-btn').addEventListener('click', (e) => { e.stopPropagation(); openPlaylistDetail(pl.id); });
                 item.querySelector('.delete-playlist-btn').addEventListener('click', async (e) => {
                     e.stopPropagation();
                     if (!confirm('Hapus playlist ini?')) return;
@@ -1103,17 +1091,13 @@
             const playlists = await DB.getAllPlaylists();
             const pl = playlists.find(p => p.id === playlistId);
             if (!pl) return;
-            
             document.getElementById('playlistDetailTitle').textContent = pl.name;
             const songs = await DB.getAllSongs();
             const listContainer = document.getElementById('playlistDetailList');
             listContainer.innerHTML = '';
-            
             const plSongs = pl.songIds.map(id => songs.find(s => s.id === id)).filter(Boolean);
-            
-            if (plSongs.length === 0) {
-                listContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">Playlist kosong</p>';
-            } else {
+            if (plSongs.length === 0) listContainer.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">Playlist kosong</p>';
+            else {
                 plSongs.forEach(song => {
                     const row = document.createElement('div');
                     row.className = 'song-row';
@@ -1128,7 +1112,6 @@
                     listContainer.appendChild(row);
                 });
             }
-            
             document.getElementById('playlistDetailModal').classList.add('active');
         }
 
@@ -1136,10 +1119,8 @@
             const playlists = await DB.getAllPlaylists();
             const container = document.getElementById('addToPlaylistList');
             container.innerHTML = '';
-            
-            if (playlists.length === 0) {
-                container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">Belum ada playlist. Buat dulu!</p>';
-            } else {
+            if (playlists.length === 0) container.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:20px">Belum ada playlist. Buat dulu!</p>';
+            else {
                 playlists.forEach(pl => {
                     const item = document.createElement('div');
                     item.className = 'add-to-playlist-item';
@@ -1152,20 +1133,14 @@
                         </div>
                     `;
                     item.addEventListener('click', async () => {
-                        if (isIn) {
-                            pl.songIds = pl.songIds.filter(id => id !== currentAddToPlaylistSongId);
-                            showToast('Dihapus dari playlist', 'info');
-                        } else {
-                            pl.songIds.push(currentAddToPlaylistSongId);
-                            showToast('Ditambahkan ke playlist!', 'success');
-                        }
+                        if (isIn) { pl.songIds = pl.songIds.filter(id => id !== currentAddToPlaylistSongId); showToast('Dihapus dari playlist', 'info'); }
+                        else { pl.songIds.push(currentAddToPlaylistSongId); showToast('Ditambahkan ke playlist!', 'success'); }
                         await DB.updatePlaylist(pl);
                         document.getElementById('addToPlaylistModal').classList.remove('active');
                     });
                     container.appendChild(item);
                 });
             }
-            
             document.getElementById('addToPlaylistModal').classList.add('active');
         }
 
@@ -1176,11 +1151,7 @@
             EQ_LABELS.forEach((label, i) => {
                 const band = document.createElement('div');
                 band.className = 'eq-band';
-                band.innerHTML = `
-                    <div class="eq-band-label">${label}</div>
-                    <input type="range" class="eq-band-slider" min="-12" max="12" value="0" data-index="${i}">
-                    <div class="eq-band-value">0 dB</div>
-                `;
+                band.innerHTML = `<div class="eq-band-label">${label}</div><input type="range" class="eq-band-slider" min="-12" max="12" value="0" data-index="${i}"><div class="eq-band-value">0 dB</div>`;
                 const slider = band.querySelector('.eq-band-slider');
                 const valueEl = band.querySelector('.eq-band-value');
                 slider.addEventListener('input', () => {
@@ -1208,47 +1179,33 @@
         function setSleepTimer(minutes) {
             if (sleepTimerTimeout) clearTimeout(sleepTimerTimeout);
             if (sleepTimerEnd) clearInterval(sleepTimerEnd);
-            
             const statusEl = document.getElementById('timerStatus');
-            
             if (minutes === 'end') {
                 sleepTimerEnd = setInterval(() => {
                     const audio = document.getElementById('audioElement');
-                    if (audio.ended) {
-                        audio.pause();
-                        clearInterval(sleepTimerEnd);
-                        sleepTimerEnd = null;
-                        statusEl.classList.remove('active');
-                        showToast('Sleep timer selesai (akhir lagu)', 'info');
-                    }
+                    if (audio.ended) { audio.pause(); clearInterval(sleepTimerEnd); sleepTimerEnd = null; statusEl.classList.remove('active'); showToast('Sleep timer selesai (akhir lagu)', 'info'); }
                 }, 1000);
                 statusEl.innerHTML = '<i class="fas fa-moon"></i> Timer aktif: akan berhenti di akhir lagu';
                 statusEl.classList.add('active');
                 showToast('Timer: berhenti di akhir lagu', 'success');
                 return;
             }
-            
             const ms = minutes * 60 * 1000;
             let remaining = ms;
-            
             sleepTimerTimeout = setTimeout(() => {
                 document.getElementById('audioElement').pause();
                 statusEl.classList.remove('active');
                 showToast('Sleep timer selesai 🌙', 'info');
             }, ms);
-            
             sleepTimerEnd = setInterval(() => {
                 remaining -= 1000;
-                if (remaining <= 0) {
-                    clearInterval(sleepTimerEnd);
-                    sleepTimerEnd = null;
-                } else {
+                if (remaining <= 0) { clearInterval(sleepTimerEnd); sleepTimerEnd = null; }
+                else {
                     const mins = Math.floor(remaining / 60000);
                     const secs = Math.floor((remaining % 60000) / 1000);
                     statusEl.innerHTML = `<i class="fas fa-moon"></i> Berhenti dalam ${mins}:${secs.toString().padStart(2, '0')}`;
                 }
             }, 1000);
-            
             statusEl.classList.add('active');
             showToast(`Timer ${minutes} menit aktif 🌙`, 'success');
         }
@@ -1271,38 +1228,21 @@
         function renderLyrics(lyrics) {
             const body = document.getElementById('lyricsBody');
             if (!lyrics || lyrics.trim() === '') {
-                body.innerHTML = `
-                    <div class="lyrics-empty">
-                        <div class="lyrics-empty-icon">🎤</div>
-                        <h3>Lirik Belum Tersedia</h3>
-                        <p>Tambahkan lirik lagu ini agar tampil estetik saat diputar</p>
-                        <button class="lyrics-add-btn" id="lyricsAddBtn"><i class="fas fa-pen"></i> Tulis Lirik Sekarang</button>
-                    </div>
-                `;
+                body.innerHTML = `<div class="lyrics-empty"><div class="lyrics-empty-icon">🎤</div><h3>Lirik Belum Tersedia</h3><p>Tambahkan lirik lagu ini agar tampil estetik saat diputar</p><button class="lyrics-add-btn" id="lyricsAddBtn"><i class="fas fa-pen"></i> Tulis Lirik Sekarang</button></div>`;
                 document.getElementById('lyricsAddBtn').addEventListener('click', () => enterLyricsEditMode(''));
                 return;
             }
             const lines = lyrics.split('\n').filter(l => l.trim() !== '');
             let html = '<div class="lyrics-text">';
-            lines.forEach((line, i) => {
-                html += `<span class="lyric-line" style="animation-delay:${i * 0.1}s">${line}</span>`;
-            });
+            lines.forEach((line, i) => { html += `<span class="lyric-line" style="animation-delay:${i * 0.1}s">${line}</span>`; });
             html += '</div>';
             body.innerHTML = html;
         }
 
         function enterLyricsEditMode(currentLyrics) {
             const body = document.getElementById('lyricsBody');
-            body.innerHTML = `
-                <textarea class="lyrics-edit-area" id="lyricsEditArea" placeholder="Tulis lirik lagu di sini...">${currentLyrics || ''}</textarea>
-                <div class="lyrics-edit-actions">
-                    <button class="lyrics-cancel-btn" id="lyricsCancelBtn"><i class="fas fa-times"></i> Batal</button>
-                    <button class="lyrics-save-btn" id="lyricsSaveBtn"><i class="fas fa-check"></i> Simpan</button>
-                </div>
-            `;
-            document.getElementById('lyricsCancelBtn').addEventListener('click', () => {
-                if (currentSong) renderLyrics(currentSong.lyrics || '');
-            });
+            body.innerHTML = `<textarea class="lyrics-edit-area" id="lyricsEditArea" placeholder="Tulis lirik lagu di sini...">${currentLyrics || ''}</textarea><div class="lyrics-edit-actions"><button class="lyrics-cancel-btn" id="lyricsCancelBtn"><i class="fas fa-times"></i> Batal</button><button class="lyrics-save-btn" id="lyricsSaveBtn"><i class="fas fa-check"></i> Simpan</button></div>`;
+            document.getElementById('lyricsCancelBtn').addEventListener('click', () => { if (currentSong) renderLyrics(currentSong.lyrics || ''); });
             document.getElementById('lyricsSaveBtn').addEventListener('click', async () => {
                 const newLyrics = document.getElementById('lyricsEditArea').value;
                 if (!currentSong) return;
@@ -1329,28 +1269,17 @@
             const songs = await DB.getAllSongs();
             const favs = songs.filter(s => s.isFavorite).length;
             const hours = Math.floor(totalListenTime / 3600);
-            
             document.getElementById('totalSongsStat').textContent = songs.length;
             document.getElementById('totalHoursStat').textContent = hours;
             document.getElementById('totalFavStat').textContent = favs;
-            
             document.getElementById('statTotalSongs').textContent = songs.length;
             document.getElementById('statTotalHours').textContent = hours + ' jam';
             document.getElementById('statTotalPlays').textContent = totalPlays;
             document.getElementById('statTotalFav').textContent = favs;
-            
             const mostPlayed = [...songs].sort((a, b) => (b.playCount || 0) - (a.playCount || 0))[0];
             const mpContainer = document.getElementById('mostPlayedContainer');
             if (mostPlayed && mostPlayed.playCount > 0) {
-                mpContainer.innerHTML = `
-                    <div class="song-row" style="cursor:default">
-                        <div class="song-row-cover">${getCoverArt(mostPlayed)}</div>
-                        <div class="song-row-info">
-                            <div class="song-row-title">${mostPlayed.name}</div>
-                            <div class="song-row-artist">${mostPlayed.artist} • ${mostPlayed.playCount}x diputar</div>
-                        </div>
-                    </div>
-                `;
+                mpContainer.innerHTML = `<div class="song-row" style="cursor:default"><div class="song-row-cover">${getCoverArt(mostPlayed)}</div><div class="song-row-info"><div class="song-row-title">${mostPlayed.name}</div><div class="song-row-artist">${mostPlayed.artist} • ${mostPlayed.playCount}x diputar</div></div></div>`;
             } else {
                 mpContainer.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:10px">Belum ada data</p>';
             }
@@ -1359,22 +1288,16 @@
         // ================= GESTURES =================
         let touchStartX = 0, touchStartY = 0;
         document.getElementById('bottomPlayer').addEventListener('touchstart', (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY;
         }, {passive: true});
-        
         document.getElementById('bottomPlayer').addEventListener('touchend', (e) => {
             const touchEndX = e.changedTouches[0].clientX;
             const touchEndY = e.changedTouches[0].clientY;
             const diffX = touchEndX - touchStartX;
             const diffY = touchEndY - touchStartY;
-            
             if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 80) {
-                if (diffX > 0) playPrevSong();
-                else playNextSong();
-            } else if (diffY < -80) {
-                openLyricsModal();
-            }
+                if (diffX > 0) playPrevSong(); else playNextSong();
+            } else if (diffY < -80) openLyricsModal();
         }, {passive: true});
 
         let lastTap = 0;
@@ -1383,8 +1306,7 @@
             if (now - lastTap < 300 && currentSong) {
                 currentSong.isFavorite = !currentSong.isFavorite;
                 DB.updateSong(currentSong);
-                updateFavButton();
-                renderSongList();
+                updateFavButton(); renderSongList();
                 showToast(currentSong.isFavorite ? '❤️ Favorit!' : 'Dihapus dari favorit', 'success');
             }
             lastTap = now;
@@ -1394,31 +1316,15 @@
         document.addEventListener('keydown', (e) => {
             if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
             const audio = document.getElementById('audioElement');
-            
-            if (e.code === 'Space') {
-                e.preventDefault();
-                if (audio.paused) audio.play(); else audio.pause();
-            } else if (e.code === 'ArrowRight') {
-                audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 5);
-            } else if (e.code === 'ArrowLeft') {
-                audio.currentTime = Math.max(0, audio.currentTime - 5);
-            } else if (e.code === 'ArrowUp') {
-                e.preventDefault();
-                audio.volume = Math.min(1, audio.volume + 0.1);
-                document.getElementById('volumeSlider').value = audio.volume * 100;
-            } else if (e.code === 'ArrowDown') {
-                e.preventDefault();
-                audio.volume = Math.max(0, audio.volume - 0.1);
-                document.getElementById('volumeSlider').value = audio.volume * 100;
-            } else if (e.code === 'KeyN') {
-                playNextSong();
-            } else if (e.code === 'KeyP') {
-                playPrevSong();
-            } else if (e.code === 'KeyL') {
-                openLyricsModal();
-            } else if (e.code === 'KeyM') {
-                document.getElementById('volumeIcon').click();
-            }
+            if (e.code === 'Space') { e.preventDefault(); if (audio.paused) audio.play(); else audio.pause(); }
+            else if (e.code === 'ArrowRight') audio.currentTime = Math.min(audio.duration || 0, audio.currentTime + 5);
+            else if (e.code === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
+            else if (e.code === 'ArrowUp') { e.preventDefault(); audio.volume = Math.min(1, audio.volume + 0.1); document.getElementById('volumeSlider').value = audio.volume * 100; }
+            else if (e.code === 'ArrowDown') { e.preventDefault(); audio.volume = Math.max(0, audio.volume - 0.1); document.getElementById('volumeSlider').value = audio.volume * 100; }
+            else if (e.code === 'KeyN') playNextSong();
+            else if (e.code === 'KeyP') playPrevSong();
+            else if (e.code === 'KeyL') openLyricsModal();
+            else if (e.code === 'KeyM') document.getElementById('volumeIcon').click();
         });
 
         // ================= MAIN INIT =================
@@ -1430,11 +1336,9 @@
             const savedName = localStorage.getItem('musicFlowUserName') || 'Music Lover';
             document.getElementById('userNameInput').value = savedName;
             updateProfileAvatar(savedName);
-            
             await renderSongList();
             await updateStats();
             
-            // Particles
             const particlesContainer = document.getElementById('particles');
             const colors = ['rgba(233,30,99,0.15)','rgba(156,39,176,0.12)','rgba(103,58,183,0.1)','rgba(63,81,181,0.08)'];
             for(let i=0;i<12;i++){
@@ -1445,34 +1349,25 @@
                 particlesContainer.appendChild(p);
             }
             
-            // Navbar scroll
             window.addEventListener('scroll', () => {
                 document.getElementById('navbar').classList.toggle('scrolled', window.pageYOffset > 50);
             }, {passive: true});
             
-            // Upload
             document.getElementById('musicUpload').addEventListener('change', handleUpload);
             document.getElementById('navUploadBtn').addEventListener('click', () => document.getElementById('musicUpload').click());
-            
-            // Search
             document.getElementById('searchInput').addEventListener('input', renderSongList);
             
-            // Tabs
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     currentTab = btn.dataset.tab;
-                    if (currentTab === 'playlists') {
-                        renderPlaylists();
-                        document.getElementById('playlistsModal').classList.add('active');
-                    } else {
-                        renderSongList();
-                    }
+                    if (currentTab === 'playlists') { renderPlaylists(); document.getElementById('playlistsModal').classList.add('active'); }
+                    else renderSongList();
                 });
             });
             
-            // Profile
+            // ===== PERBAIKAN: Profile & Avatar Upload =====
             const profileModal = document.getElementById('profileModal');
             document.getElementById('profileBtn').addEventListener('click', async () => {
                 profileModal.classList.add('active');
@@ -1481,20 +1376,65 @@
             profileModal.querySelector('.close-modal').addEventListener('click', () => profileModal.classList.remove('active'));
             profileModal.addEventListener('click', (e) => { if (e.target === profileModal) profileModal.classList.remove('active'); });
             
-            document.getElementById('editAvatarBtn').addEventListener('click', () => document.getElementById('avatarUpload').click());
-            document.getElementById('avatarUpload').addEventListener('change', (e) => {
+            // Klik wrapper avatar juga buka file picker
+            document.getElementById('avatarWrapper').addEventListener('click', (e) => {
+                // Jangan trigger kalau yang diklik adalah tombol edit (sudah ada handler sendiri)
+                if (e.target.closest('#editAvatarBtn')) return;
+                document.getElementById('avatarUpload').click();
+            });
+            
+            // Handler tombol edit avatar - PERBAIKAN UTAMA
+            const editAvatarBtn = document.getElementById('editAvatarBtn');
+            editAvatarBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const avatarInput = document.getElementById('avatarUpload');
+                // Reset value dulu supaya bisa pilih file yang sama
+                avatarInput.value = '';
+                avatarInput.click();
+            });
+            
+            // Handler file avatar upload - PERBAIKAN UTAMA dengan kompresi
+            document.getElementById('avatarUpload').addEventListener('change', async (e) => {
                 const file = e.target.files[0];
-                if (!file || !file.type.startsWith('image/') || file.size > 2 * 1024 * 1024) {
-                    showToast('File harus gambar < 2MB', 'error');
+                if (!file) return;
+                
+                // Validasi tipe file
+                if (!file.type.startsWith('image/')) {
+                    showToast('File harus berupa gambar!', 'error');
+                    e.target.value = '';
                     return;
                 }
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    localStorage.setItem('musicFlowUserAvatar', ev.target.result);
-                    updateProfileAvatar(document.getElementById('userNameInput').value);
-                    showToast('Foto profil diubah!', 'success');
-                };
-                reader.readAsDataURL(file);
+                
+                showToast('Memproses gambar...', 'info');
+                
+                try {
+                    // Kompresi otomatis: max 400px, quality 85%
+                    const compressedBase64 = await compressImage(file, 400, 0.85);
+                    
+                    // Cek ukuran base64 (harus < 4MB untuk aman di localStorage)
+                    const sizeInMB = (compressedBase64.length * 2) / (1024 * 1024);
+                    
+                    if (sizeInMB > 4) {
+                        showToast('Gambar terlalu besar, coba foto lain', 'error');
+                        e.target.value = '';
+                        return;
+                    }
+                    
+                    // Simpan ke localStorage
+                    try {
+                        localStorage.setItem('musicFlowUserAvatar', compressedBase64);
+                        updateProfileAvatar(document.getElementById('userNameInput').value);
+                        showToast('✅ Foto profil berhasil diubah!', 'success');
+                    } catch (storageError) {
+                        console.error('Storage error:', storageError);
+                        showToast('Penyimpanan penuh! Coba foto lebih kecil', 'error');
+                    }
+                } catch (err) {
+                    console.error('Error processing image:', err);
+                    showToast('Gagal memproses gambar', 'error');
+                }
+                
                 e.target.value = '';
             });
             
@@ -1505,7 +1445,6 @@
                 showToast('Nama diperbarui!', 'success');
             });
             
-            // Playlists modal
             const playlistsModal = document.getElementById('playlistsModal');
             playlistsModal.querySelector('.close-modal').addEventListener('click', () => playlistsModal.classList.remove('active'));
             playlistsModal.addEventListener('click', (e) => { if (e.target === playlistsModal) playlistsModal.classList.remove('active'); });
@@ -1525,52 +1464,12 @@
                 showToast('Playlist dibuat!', 'success');
             });
             
-            // Playlist detail modal
             const pdModal = document.getElementById('playlistDetailModal');
             pdModal.querySelector('.close-modal').addEventListener('click', () => pdModal.classList.remove('active'));
             pdModal.addEventListener('click', (e) => { if (e.target === pdModal) pdModal.classList.remove('active'); });
             
-            // Add to playlist modal
             const atpModal = document.getElementById('addToPlaylistModal');
             atpModal.querySelector('.close-modal').addEventListener('click', () => atpModal.classList.remove('active'));
             atpModal.addEventListener('click', (e) => { if (e.target === atpModal) atpModal.classList.remove('active'); });
             
-            // Equalizer modal
-            const eqModal = document.getElementById('equalizerModal');
-            document.getElementById('equalizerBtn').addEventListener('click', () => {
-                if (!audioContext) setupAudioContext();
-                eqModal.classList.add('active');
-            });
-            eqModal.querySelector('.close-modal').addEventListener('click', () => eqModal.classList.remove('active'));
-            eqModal.addEventListener('click', (e) => { if (e.target === eqModal) eqModal.classList.remove('active'); });
-            
-            document.querySelectorAll('.eq-preset-btn').forEach(btn => {
-                btn.addEventListener('click', () => applyEQPreset(btn.dataset.preset));
-            });
-            
-            // Sleep timer modal
-            const stModal = document.getElementById('sleepTimerModal');
-            document.getElementById('sleepTimerBtn').addEventListener('click', () => stModal.classList.add('active'));
-            stModal.querySelector('.close-modal').addEventListener('click', () => stModal.classList.remove('active'));
-            stModal.addEventListener('click', (e) => { if (e.target === stModal) stModal.classList.remove('active'); });
-            
-            document.querySelectorAll('.timer-option').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    document.querySelectorAll('.timer-option').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    const mins = btn.dataset.minutes === 'end' ? 'end' : parseInt(btn.dataset.minutes);
-                    setSleepTimer(mins);
-                });
-            });
-            
-            // Lyrics modal
-            document.getElementById('lyricsBtn').addEventListener('click', openLyricsModal);
-            document.getElementById('lyricsCloseBtn').addEventListener('click', () => document.getElementById('lyricsModal').classList.remove('active'));
-            document.getElementById('lyricsEditBtn').addEventListener('click', () => {
-                if (!currentSong) return;
-                enterLyricsEditMode(currentSong.lyrics || '');
-            });
-            
-            // Player controls
-            const audio = document.getElementById('audioElement');
-            const
+            const eqModal = document.getElementById
