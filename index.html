@@ -115,6 +115,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .toast{background:rgba(10,10,15,0.95);border:1px solid var(--bg-glass-border);border-left:4px solid var(--primary);padding:14px 20px;border-radius:12px;font-size:0.9rem;box-shadow:0 10px 30px rgba(0,0,0,0.4);animation:slideIn 0.4s ease-out,fadeOut 0.4s ease-in 2.6s forwards;display:flex;align-items:center;gap:10px;max-width:320px;pointer-events:auto}
 .toast.success{border-left-color:#4caf50}
 .toast.error{border-left-color:#f44336}
+.sleep-time-btn{padding:16px;background:rgba(255,255,255,0.05);border:1px solid var(--bg-glass-border);border-radius:12px;color:var(--text-primary);font-family:inherit;font-size:1rem;font-weight:600;cursor:pointer;transition:0.2s;width:100%}
+.sleep-time-btn:hover{background:rgba(233,30,99,0.1);border-color:var(--primary);color:var(--primary)}
 @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 @keyframes fadeOut{to{opacity:0;transform:translateX(20px)}}
 @media(max-width:768px){.player-main{padding:10px 15px;gap:12px}.player-extra{padding:0 15px 8px}.player-progress{padding:0 15px 10px}.player-controls{gap:4px}.player-controls button{width:32px;height:32px;font-size:0.85rem}.play-pause-main{width:40px!important;height:40px!important}.toast-container{left:20px;right:20px}.toast{max-width:100%}}
@@ -143,7 +145,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
         <p class="hero-desc">Aplikasi musik pribadi buatanmu sendiri. Upload, simpan, putar, dan nikmati musik tanpa batas.</p>
         <div style="display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin-bottom:30px">
             <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-music" style="color:var(--primary)"></i><span id="totalSongsStat">0</span> Lagu</div>
-            <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-clock" style="color:var(--primary)"></i><span id="totalHoursStat">0</span> Jam</div>
+            <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-clock" style="color:var(--primary)"></i><span id="totalHoursStat">0 Menit</span></div>
             <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-heart" style="color:var(--primary)"></i><span id="totalFavStat">0</span> Favorit</div>
         </div>
     </div>
@@ -190,7 +192,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
             <h4 style="margin-bottom:12px;font-size:0.95rem">📊 Statistik Dengar</h4>
             <div class="stats-grid">
                 <div class="stat-card"><i class="fas fa-music"></i><div class="stat-card-value" id="statTotalSongs">0</div><div class="stat-card-label">Total Lagu</div></div>
-                <div class="stat-card"><i class="fas fa-clock"></i><div class="stat-card-value" id="statTotalHours">0 jam</div><div class="stat-card-label">Total Dengar</div></div>
+                <div class="stat-card"><i class="fas fa-clock"></i><div class="stat-card-value" id="statTotalHours">0 Menit</div><div class="stat-card-label">Total Dengar</div></div>
                 <div class="stat-card"><i class="fas fa-play"></i><div class="stat-card-value" id="statTotalPlays">0</div><div class="stat-card-label">Total Play</div></div>
                 <div class="stat-card"><i class="fas fa-heart"></i><div class="stat-card-value" id="statTotalFav">0</div><div class="stat-card-label">Favorit</div></div>
             </div>
@@ -244,6 +246,25 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
     </div>
 </div>
 
+<!-- Sleep Timer Modal -->
+<div class="modal-overlay" id="sleepTimerModal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h3>Mode Tidur</h3>
+            <button class="close-modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <button class="sleep-time-btn" data-min="15">15 Menit</button>
+                <button class="sleep-time-btn" data-min="30">30 Menit</button>
+                <button class="sleep-time-btn" data-min="60">60 Menit</button>
+                <button class="sleep-time-btn" data-min="0" style="background: rgba(244, 67, 54, 0.1); color: #f44336; border-color: rgba(244, 67, 54, 0.3);">Matikan</button>
+            </div>
+            <div id="sleepTimerStatus" style="text-align:center; margin-top:24px; color: var(--text-secondary); font-size: 0.95rem; padding: 12px; background: rgba(255,255,255,0.03); border-radius: 10px;">Mode tidur tidak aktif</div>
+        </div>
+    </div>
+</div>
+
 <!-- Bottom Player -->
 <div class="bottom-player" id="bottomPlayer">
     <canvas class="visualizer-canvas" id="visualizerCanvas"></canvas>
@@ -263,6 +284,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
             <button id="playPauseBtn" class="play-pause-main"><i class="fas fa-play"></i></button>
             <button id="nextBtn" title="Berikutnya"><i class="fas fa-step-forward"></i></button>
             <button id="repeatBtn" title="Ulangi"><i class="fas fa-redo"></i></button>
+            <button id="sleepTimerBtn" title="Mode Tidur"><i class="fas fa-moon"></i></button>
         </div>
         <button id="favBtn" title="Favorit" style="background:none;border:none;color:var(--text-secondary);font-size:1rem;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center"><i class="far fa-heart"></i></button>
     </div>
@@ -331,6 +353,10 @@ let isMuted = false, lastVolume = 0.8;
 let totalListenTime = parseInt(localStorage.getItem('totalListenTime') || '0');
 let totalPlays = parseInt(localStorage.getItem('totalPlays') || '0');
 let listenTimeInterval = null;
+
+// Sleep Timer State
+let sleepTimerTarget = 0;
+let sleepTimerInterval = null;
 
 // ================= UI HELPERS =================
 function showToast(message, type = 'info') {
@@ -612,6 +638,15 @@ async function playSong(song) {
             if (!a.paused && !a.ended) {
                 totalListenTime++;
                 localStorage.setItem('totalListenTime', totalListenTime);
+                
+                const h = Math.floor(totalListenTime / 3600);
+                const m = Math.floor((totalListenTime % 3600) / 60);
+                const timeText = h > 0 ? `${h} Jam ${m} Menit` : `${m} Menit`;
+                
+                const el1 = document.getElementById('totalHoursStat');
+                const el2 = document.getElementById('statTotalHours');
+                if (el1) el1.textContent = timeText;
+                if (el2) el2.textContent = timeText;
             }
         }, 1000);
         
@@ -823,14 +858,75 @@ document.getElementById('addToPlaylistList').addEventListener('click', async (e)
 async function updateStats() {
     const songs = await DB.getAllSongs();
     const favs = songs.filter(s => s.isFavorite).length;
-    const hours = Math.floor(totalListenTime / 3600);
+    
+    const h = Math.floor(totalListenTime / 3600);
+    const m = Math.floor((totalListenTime % 3600) / 60);
+    const timeText = h > 0 ? `${h} Jam ${m} Menit` : `${m} Menit`;
+
     document.getElementById('totalSongsStat').textContent = songs.length;
-    document.getElementById('totalHoursStat').textContent = hours;
+    document.getElementById('totalHoursStat').textContent = timeText;
     document.getElementById('totalFavStat').textContent = favs;
     document.getElementById('statTotalSongs').textContent = songs.length;
-    document.getElementById('statTotalHours').textContent = hours + ' jam';
+    document.getElementById('statTotalHours').textContent = timeText;
     document.getElementById('statTotalPlays').textContent = totalPlays;
     document.getElementById('statTotalFav').textContent = favs;
+}
+
+// ================= SLEEP TIMER =================
+function startSleepTimer(minutes) {
+    if (sleepTimerInterval) clearInterval(sleepTimerInterval);
+    
+    if (minutes === 0) {
+        sleepTimerTarget = 0;
+        updateSleepTimerUI();
+        showToast('Mode tidur dimatikan', 'info');
+        return;
+    }
+    
+    sleepTimerTarget = Date.now() + (minutes * 60 * 1000);
+    showToast(`😴 Mode tidur diatur: ${minutes} menit`, 'success');
+    
+    sleepTimerInterval = setInterval(() => {
+        const remaining = sleepTimerTarget - Date.now();
+        if (remaining <= 0) {
+            clearInterval(sleepTimerInterval);
+            sleepTimerTarget = 0;
+            const audio = document.getElementById('audioElement');
+            audio.pause();
+            document.getElementById('playPauseBtn').innerHTML = '<i class="fas fa-play"></i>';
+            document.getElementById('playerVinyl').classList.remove('spinning');
+            showToast('😴 Mode tidur aktif: Musik dijeda', 'info');
+            updateSleepTimerUI();
+        } else {
+            updateSleepTimerUI();
+        }
+    }, 1000);
+    
+    updateSleepTimerUI();
+}
+
+function updateSleepTimerUI() {
+    const btn = document.getElementById('sleepTimerBtn');
+    const status = document.getElementById('sleepTimerStatus');
+    
+    if (sleepTimerTarget > 0) {
+        btn.classList.add('active-mode');
+        if (status) {
+            const remaining = Math.ceil((sleepTimerTarget - Date.now()) / 1000);
+            const m = Math.floor(remaining / 60);
+            const s = remaining % 60;
+            status.textContent = `⏳ Musik akan dijeda dalam ${m}m ${s.toString().padStart(2, '0')}d`;
+            status.style.color = 'var(--primary)';
+            status.style.background = 'rgba(233, 30, 99, 0.1)';
+        }
+    } else {
+        btn.classList.remove('active-mode');
+        if (status) {
+            status.textContent = 'Mode tidur tidak aktif';
+            status.style.color = 'var(--text-secondary)';
+            status.style.background = 'rgba(255,255,255,0.03)';
+        }
+    }
 }
 
 // ================= MAIN INIT =================
@@ -860,7 +956,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
     
-    // ===== PROFILE & AVATAR - FIXED =====
+    // Profile & Avatar
     const profileModal = document.getElementById('profileModal');
     document.getElementById('profileBtn').addEventListener('click', async () => {
         profileModal.classList.add('active');
@@ -869,7 +965,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     profileModal.querySelector('.close-modal').addEventListener('click', () => profileModal.classList.remove('active'));
     profileModal.addEventListener('click', (e) => { if (e.target === profileModal) profileModal.classList.remove('active'); });
     
-    // Tombol edit avatar - FIXED
     document.getElementById('editAvatarBtn').addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -878,29 +973,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         avatarInput.click();
     });
     
-    // Upload avatar - FIXED dengan kompresi
     document.getElementById('avatarUpload').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        
         if (!file.type.startsWith('image/')) {
             showToast('File harus berupa gambar!', 'error');
             e.target.value = '';
             return;
         }
-        
         showToast('Memproses gambar...', 'info');
-        
         try {
             const compressedBase64 = await compressImage(file, 400, 0.8);
             const sizeInMB = (compressedBase64.length * 2) / (1024 * 1024);
-            
             if (sizeInMB > 4) {
                 showToast('Gambar terlalu besar', 'error');
                 e.target.value = '';
                 return;
             }
-            
             try {
                 localStorage.setItem('musicFlowUserAvatar', compressedBase64);
                 updateProfileAvatar(document.getElementById('userNameInput').value);
@@ -941,11 +1030,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         showToast('Playlist dibuat!', 'success');
     });
     
-    // Close modals
-    ['playlistDetailModal', 'addToPlaylistModal'].forEach(modalId => {
+    // Close modals helper
+    ['playlistDetailModal', 'addToPlaylistModal', 'sleepTimerModal'].forEach(modalId => {
         const modal = document.getElementById(modalId);
         modal.querySelector('.close-modal').addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+    });
+
+    // Sleep Timer Button
+    document.getElementById('sleepTimerBtn').addEventListener('click', () => {
+        document.getElementById('sleepTimerModal').classList.add('active');
+        updateSleepTimerUI();
+    });
+    
+    document.querySelectorAll('.sleep-time-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const mins = parseInt(btn.dataset.min);
+            startSleepTimer(mins);
+            document.getElementById('sleepTimerModal').classList.remove('active');
+        });
     });
     
     // Player controls
