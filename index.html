@@ -12,13 +12,13 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--primary:#e91e63;--primary-dark:#c2185b;--primary-glow:rgba(233,30,99,0.4);--bg-dark:#0a0a0f;--bg-glass:rgba(255,255,255,0.06);--bg-glass-border:rgba(255,255,255,0.1);--text-primary:#fff;--text-secondary:#a0a0b0;--text-muted:#6a6a7a}
 body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-primary);min-height:100vh;padding-bottom:200px;transition:background 0.5s}
-.navbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:1200px;z-index:1000;padding:14px 32px;border-radius:20px;background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);border:1px solid var(--bg-glass-border);display:flex;align-items:center;justify-content:space-between}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.3rem;color:var(--text-primary);text-decoration:none}
-.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),#9c27b0);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff}
+.navbar{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:1200px;z-index:1000;padding:14px 32px;border-radius:20px;background:rgba(10,10,15,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--bg-glass-border);display:flex;align-items:center;justify-content:space-between;box-shadow:0 8px 30px rgba(0,0,0,0.35)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.3rem;color:var(--text-primary);text-decoration:none;white-space:nowrap}
+.logo-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--primary),#9c27b0);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0}
 .nav-actions{display:flex;gap:14px;align-items:center}
 .btn{padding:10px 24px;border-radius:12px;font-weight:600;font-size:0.88rem;cursor:pointer;border:none;display:inline-flex;align-items:center;gap:8px}
 .btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 4px 20px var(--primary-glow)}
-.profile-btn{width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;border:2px solid var(--bg-glass-border)}
+.profile-btn{width:40px;height:40px;border-radius:50%;overflow:hidden;cursor:pointer;border:2px solid var(--bg-glass-border);flex-shrink:0}
 .profile-avatar{width:100%;height:100%;object-fit:cover;display:block}
 .hero{min-height:100vh;display:flex;align-items:center;padding:140px 5% 80px;background:radial-gradient(ellipse at 70% 30%,rgba(120,50,180,0.35) 0%,transparent 60%),radial-gradient(ellipse at 30% 70%,rgba(233,30,99,0.2) 0%,transparent 50%);transition:background 0.5s}
 .hero-container{max-width:1200px;margin:0 auto;text-align:center;width:100%}
@@ -44,7 +44,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .song-row-info{flex:1;min-width:0}
 .song-row-title{font-weight:600;font-size:0.95rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
 .song-row-artist{font-size:0.8rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.song-row-actions{display:flex;gap:6px}
+.song-row-actions{display:flex;gap:6px;flex-shrink:0}
 .song-row-actions button{width:34px;height:34px;border-radius:50%;border:none;background:transparent;color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .song-row-actions button:hover{color:var(--primary);background:rgba(233,30,99,0.1)}
 .song-row-actions .fav-btn.active{color:var(--primary)}
@@ -89,7 +89,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .playlist-input-group button{padding:10px 18px;background:var(--primary);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600}
 .bottom-player{position:fixed;bottom:0;left:0;width:100%;background:rgba(10,10,15,0.97);backdrop-filter:blur(25px);border-top:1px solid var(--bg-glass-border);z-index:1000;transform:translateY(100%);transition:0.4s;box-shadow:0 -10px 40px rgba(0,0,0,0.5)}
 .bottom-player.active{transform:translateY(0)}
-.visualizer-canvas{position:absolute;top:-40px;left:0;width:100%;height:40px;pointer-events:none;opacity:0.7;transition:opacity 0.5s}
+.visualizer-canvas{position:absolute;top:-40px;left:0;width:100%;height:40px;pointer-events:none;opacity:0.55;transition:opacity 0.5s}
 .player-main{display:flex;align-items:center;gap:16px;padding:12px 20px}
 .player-vinyl{width:55px;height:55px;border-radius:50%;background:linear-gradient(135deg,#1a1a1a,#333);border:2px solid rgba(255,255,255,0.1);position:relative;overflow:hidden;flex-shrink:0}
 .player-vinyl.spinning{animation:spin 4s linear infinite}
@@ -97,8 +97,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg-dark);color:var(--text-p
 .player-vinyl-cover{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60%;height:60%;border-radius:50%;background:linear-gradient(135deg,var(--primary),#9c27b0);display:flex;align-items:center;justify-content:center;color:#fff;overflow:hidden}
 .player-info{flex:1;min-width:0}
 .player-text span:first-child{font-weight:600;font-size:0.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
-.player-text span:last-child{font-size:0.75rem;color:var(--text-muted)}
-.player-controls{display:flex;align-items:center;gap:8px}
+.player-text span:last-child{font-size:0.75rem;color:var(--text-muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player-controls{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .player-controls button{background:none;border:none;color:var(--text-secondary);font-size:0.95rem;cursor:pointer;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .player-controls button:hover{color:var(--text-primary);background:rgba(255,255,255,0.05)}
 .player-controls button.active-mode{color:var(--primary)!important;background:rgba(233,30,99,0.15)}
@@ -165,7 +165,42 @@ body.battery-saver .toast{animation:none}
 .backup-btn.import{background:rgba(255,255,255,0.03);border-color:var(--bg-glass-border);color:var(--text-primary)}
 .backup-btn.import:hover{background:rgba(233,30,99,0.1);border-color:var(--primary);color:var(--primary)}
 
-@media(max-width:768px){.player-main{padding:10px 15px;gap:12px}.player-extra{padding:0 15px 8px}.player-progress{padding:0 15px 10px}.player-controls{gap:4px}.player-controls button{width:32px;height:32px;font-size:0.85rem}.play-pause-main{width:40px!important;height:40px!important}.toast-container{left:20px;right:20px}.toast{max-width:100%}}
+/* ===== MOBILE RAPIH & BERSIH ===== */
+@media(max-width:768px){
+    .navbar{top:12px;width:calc(100% - 24px);padding:10px 14px;border-radius:16px}
+    .logo{font-size:1.05rem;gap:8px}
+    .logo-icon{width:30px;height:30px;border-radius:8px;font-size:0.85rem}
+    .nav-actions{gap:8px}
+    #navUploadBtn{padding:8px 12px!important;font-size:0.8rem!important}
+    .profile-btn{width:34px;height:34px}
+    .hero{padding:110px 5% 60px}
+    .library-section{padding:50px 4%}
+    .song-row{padding:10px 12px;gap:10px}
+    .song-row-cover{width:44px;height:44px;border-radius:8px}
+    .song-row-title{font-size:0.9rem}
+    .song-row-artist{font-size:0.75rem}
+    .song-row-actions{gap:2px}
+    .song-row-actions button{width:30px;height:30px;font-size:0.8rem}
+    .upload-row{padding:18px}
+    .visualizer-canvas{top:-24px;height:24px;opacity:0.45}
+    .player-main{padding:10px 12px;gap:10px}
+    .player-vinyl{width:46px;height:46px}
+    .player-info{min-width:70px}
+    .player-text span:first-child{font-size:0.85rem}
+    .player-text span:last-child{font-size:0.7rem}
+    .player-controls{gap:2px}
+    .player-controls button{width:30px;height:30px;font-size:0.8rem}
+    .play-pause-main{width:38px!important;height:38px!important}
+    .player-extra{padding:0 12px 6px;gap:8px}
+    .volume-control{min-width:110px}
+    .volume-slider{max-width:90px}
+    #lyricsBtn,#sleepTimerBtn{padding:6px 10px;font-size:0.8rem}
+    .player-progress{padding:0 12px 10px}
+    .toast-container{left:12px;right:12px;top:70px}
+    .toast{max-width:100%}
+    .modal-body{padding:16px 18px}
+    .backup-buttons{grid-template-columns:1fr 1fr;gap:8px}
+}
 </style>
 </head>
 <body>
@@ -1185,9 +1220,7 @@ function applyBatterySaverMode(enabled) {
     if (toggle) toggle.classList.toggle('active', enabled);
 }
 
-// ===== FUNGSI INI SUDAH DIPERBAIKI: LENGKAP & TERTUTUP SEMPURNA =====
 async function initBatteryMonitor() {
-    // Fallback aman: jika browser tidak mendukung Battery API, keluar tanpa error
     if (!navigator.getBattery) {
         console.log('Battery API tidak didukung di browser ini');
         return;
@@ -1218,10 +1251,8 @@ async function initBatteryMonitor() {
             }
         }
 
-        // Tampilkan status baterai pertama kali
         updateBatteryUI();
 
-        // Update real-time saat level baterai atau status charging berubah
         battery.addEventListener('levelchange', function() {
             batteryLevel = battery.level;
             updateBatteryUI();
@@ -1235,7 +1266,6 @@ async function initBatteryMonitor() {
         console.log('Battery API tidak tersedia:', e);
     }
 }
-// ===== AKHIR FUNGSI initBatteryMonitor (kurung kurawal lengkap) =====
 
 // ================= BACKUP & EXPORT =================
 async function exportBackup() {
